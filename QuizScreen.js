@@ -8,13 +8,22 @@ const arraysMatch = (arr1, arr2) => {
     return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
 };
 
-const OptionItem = ({ item, onSelect }) => {
+const OptionItem = ({ item, onSelect, status }) => {
+    let backgroundColor;
+    if (status === 'correct') {
+        backgroundColor = '#34A853'; // Green for correct
+    } else if (status === 'incorrect') {
+        backgroundColor = '#a83434'; // Red for incorrect
+    } else {
+        backgroundColor = '#2c3848'; // Default color
+    }
+
     return (
         <Animated.View
             entering={FadeIn}
             exiting={FadeOut}
             layout={commonSpringLayout}
-            style={styles.optionItem}
+            style={[styles.optionItem, { backgroundColor }]}
         >
             <TouchableOpacity onPress={() => onSelect(item)}>
                 <Text style={styles.optionText}>{item}</Text>
@@ -23,10 +32,12 @@ const OptionItem = ({ item, onSelect }) => {
     );
 };
 
+
 const QuizScreen = ({ route, navigation }) => {
     const { quizData } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [options, setOptions] = useState(quizData[currentQuestionIndex].options);
+    const [optionStatuses, setOptionStatuses] = useState({});
     const [answers, setAnswers] = useState([]);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
@@ -42,24 +53,36 @@ const QuizScreen = ({ route, navigation }) => {
     const checkAnswers = () => {
         const isCorrect = arraysMatch(answers, quizData[currentQuestionIndex].correctAnswers);
     
-        if (currentQuestionIndex < quizData.length - 1) {
-            if (isCorrect) {
-                setCorrectAnswersCount(prevCount => prevCount + 1);
+        // Update optionStatuses to reflect feedback
+        let statuses = {};
+        answers.forEach(option => {
+            statuses[option] = isCorrect ? 'correct' : 'incorrect';
+        });
+        setOptionStatuses(statuses);
+    
+        // Use setTimeout to introduce a delay
+        setTimeout(() => {
+            if (currentQuestionIndex < quizData.length - 1) {
+                if (isCorrect) {
+                    setCorrectAnswersCount(prevCount => prevCount + 1);
+                }
+                const nextIndex = currentQuestionIndex + 1;
+                setCurrentQuestionIndex(nextIndex);
+                setOptions(quizData[nextIndex].options);
+                setAnswers([]);
+                setOptionStatuses({}); // Reset option statuses for the next question
+            } else {
+                setCorrectAnswersCount(prevCount => {
+                    const newCount = isCorrect ? prevCount + 1 : prevCount;
+                    Alert.alert("Quiz Completed", `You've completed all questions!\nCorrect Answers: ${newCount}/${quizData.length}`, [
+                        { text: "See Summary", onPress: () => navigation.replace('Summary', { score: newCount, totalQuestions: quizData.length }) }
+                    ]);
+                    return newCount;
+                });
             }
-            const nextIndex = currentQuestionIndex + 1;
-            setCurrentQuestionIndex(nextIndex);
-            setOptions(quizData[nextIndex].options);
-            setAnswers([]);
-        } else {
-            setCorrectAnswersCount(prevCount => {
-                const newCount = isCorrect ? prevCount + 1 : prevCount;
-                Alert.alert("Quiz Completed", `You've completed all questions!\nCorrect Answers: ${newCount}/${quizData.length}`, [
-                    { text: "See Summary", onPress: () => navigation.replace('Summary', { score: newCount, totalQuestions: quizData.length }) }
-                ]);
-                return newCount;
-            });
-        }
+        }, 500);
     };
+    
     
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -70,7 +93,7 @@ const QuizScreen = ({ route, navigation }) => {
             <Text style={styles.title}>Your Answers</Text>
             <Animated.View style={[styles.optionsContainer, { borderBottomColor: 'white', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
                 {answers.map(answer => (
-                    <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} />
+                    <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
                 ))}
             </Animated.View>
             <Text style={styles.title}>Options</Text>
@@ -79,12 +102,12 @@ const QuizScreen = ({ route, navigation }) => {
                     <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
                 ))}
             </Animated.View>
-            <TouchableOpacity style={styles.checkButton} onPress={checkAnswers}>
-                <Text style={styles.checkButtonText}>Check Answers</Text>
-            </TouchableOpacity>
             <View style={styles.counterContainer}>
                 <Text style={styles.counterText}>Correct Answers: {correctAnswersCount}</Text>
             </View>
+            <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
+                <Text style={styles.checkButtonText}>Check Answers</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 };
@@ -95,6 +118,7 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         paddingHorizontal: 20,
         backgroundColor: '#041121',
+        justifyContent: 'space-between', // Adjust to space content
     },
     questionContainer: {
         marginTop: 20,
@@ -118,7 +142,6 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     optionItem: {
-        backgroundColor: '#2c3848',
         padding: 10,
         borderRadius: 4,
         margin: 5,
@@ -129,6 +152,34 @@ const styles = StyleSheet.create({
         color: '#f9feff',
         fontSize: 18,
     },
+    counterContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+        padding: 10,
+    },
+    counterText: {
+        color: '#fdfffc',
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
+    checkButtonLarge: { // Adjusted style for the larger check button
+        backgroundColor: '#34A853', // Example color, adjust as needed
+        paddingVertical: 15, // Increased padding for a taller button
+        paddingHorizontal: 20, // Increased padding for a wider button
+        borderRadius: 10, // Rounded corners
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        marginBottom: 30, // Space from bottom
+        alignSelf: 'stretch', // Stretch to the container's width
+    },
+    checkButtonText: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    // Add any other styles you might need
 });
+
 
 export default QuizScreen;
