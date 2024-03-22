@@ -16,9 +16,10 @@ const AppNavigator = () => {
           headerStyle: commonStyles.darkThemeBackground,
           headerTintColor: commonStyles.lightText.color,
           headerTitleStyle: commonStyles.titleText,
+          animation: 'slide_from_right', // Default for iOS, applies it for Android as well
         }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: '' }} />
+        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Quiz" component={QuizScreen} />
         <Stack.Screen name="Summary" component={SummaryScreen} />
       </Stack.Navigator>

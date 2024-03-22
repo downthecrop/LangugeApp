@@ -26,13 +26,9 @@ const OptionItem = ({ item, onSelect }) => {
 const QuizScreen = ({ route, navigation }) => {
     const { quizData } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const currentQuestion = quizData[currentQuestionIndex];
-
-
-    // Initialize options and answers based on the current question
-    const [options, setOptions] = useState(currentQuestion.options);
+    const [options, setOptions] = useState(quizData[currentQuestionIndex].options);
     const [answers, setAnswers] = useState([]);
-    const [userAnswers, setUserAnswers] = useState([]);
+    const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
     const handleOptionSelection = (selectedOption) => {
         if (answers.includes(selectedOption)) {
@@ -43,52 +39,33 @@ const QuizScreen = ({ route, navigation }) => {
             setAnswers([...answers, selectedOption]);
         }
     };
-
     const checkAnswers = () => {
+        const isCorrect = arraysMatch(answers, quizData[currentQuestionIndex].correctAnswers);
+    
         if (currentQuestionIndex < quizData.length - 1) {
-            setUserAnswers(prevUserAnswers => {
-                const newUserAnswers = [...prevUserAnswers, answers];
-                // Move to the next question since the quiz is not yet completed
-                const nextIndex = currentQuestionIndex + 1;
-                setCurrentQuestionIndex(nextIndex);
-                setOptions(quizData[nextIndex].options);
-                setAnswers([]);
-                return newUserAnswers;
-            });
+            if (isCorrect) {
+                setCorrectAnswersCount(prevCount => prevCount + 1);
+            }
+            const nextIndex = currentQuestionIndex + 1;
+            setCurrentQuestionIndex(nextIndex);
+            setOptions(quizData[nextIndex].options);
+            setAnswers([]);
         } else {
-            // Done inside of setUserAnswers because of an Async issue
-            setUserAnswers(prevUserAnswers => {
-                const newUserAnswers = [...prevUserAnswers, answers];
-
-                // Calculate the score with the newly updated userAnswers
-                const score = calculateScore(newUserAnswers); // Pass newUserAnswers to use the most up-to-date answers
-                const totalQuestions = quizData.length;
-
-                // Navigate to Summary screen with the score
-                Alert.alert("Quiz Completed", "You've completed all questions!", [
-                    { text: "See Summary", onPress: () => navigation.replace('Summary', { score, totalQuestions }) }
+            setCorrectAnswersCount(prevCount => {
+                const newCount = isCorrect ? prevCount + 1 : prevCount;
+                Alert.alert("Quiz Completed", `You've completed all questions!\nCorrect Answers: ${newCount}/${quizData.length}`, [
+                    { text: "See Summary", onPress: () => navigation.replace('Summary', { score: newCount, totalQuestions: quizData.length }) }
                 ]);
-                return newUserAnswers;
+                return newCount;
             });
         }
     };
-
-    const calculateScore = (userAnswers) => {
-        let score = 0;
-        quizData.forEach((question, index) => {
-            if (userAnswers[index] && arraysMatch(question.correctAnswers, userAnswers[index])) {
-                score += 1;
-            }
-        });
-
-        return score;
-    };
-
+    
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <StatusBar barStyle="light-content" />
             <View style={styles.questionContainer}>
-                <Text style={styles.questionText}>{currentQuestion.question}</Text>
+                <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
             </View>
             <Text style={styles.title}>Your Answers</Text>
             <Animated.View style={[styles.optionsContainer, { borderBottomColor: 'white', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
@@ -105,6 +82,9 @@ const QuizScreen = ({ route, navigation }) => {
             <TouchableOpacity style={styles.checkButton} onPress={checkAnswers}>
                 <Text style={styles.checkButtonText}>Check Answers</Text>
             </TouchableOpacity>
+            <View style={styles.counterContainer}>
+                <Text style={styles.counterText}>Correct Answers: {correctAnswersCount}</Text>
+            </View>
         </ScrollView>
     );
 };
