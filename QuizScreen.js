@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StatusBar, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StatusBar, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, BackHandler  } from 'react-native';
 import Animated, { Layout, FadeOut, FadeIn } from 'react-native-reanimated';
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
@@ -41,6 +41,25 @@ const QuizScreen = ({ route, navigation }) => {
     const [answers, setAnswers] = useState([]);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
+    const handleBackButtonPress = () => {
+        Alert.alert(
+            "Exit Quiz", // Alert Title
+            "Are you sure you want to exit the quiz?", // Alert Message
+            [
+                { text: "Cancel", onPress: () => { }, style: "cancel" },
+                { text: "Yes", onPress: () => navigation.goBack() },
+            ],
+            { cancelable: true }
+        );
+
+        return true;
+    };
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress);
+        return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress);
+    }, [navigation]);
+
     const handleOptionSelection = (selectedOption) => {
         if (answers.includes(selectedOption)) {
             setAnswers(answers.filter(answer => answer !== selectedOption));
@@ -52,14 +71,14 @@ const QuizScreen = ({ route, navigation }) => {
     };
     const checkAnswers = () => {
         const isCorrect = arraysMatch(answers, quizData[currentQuestionIndex].correctAnswers);
-    
+
         // Update optionStatuses to reflect feedback
         let statuses = {};
         answers.forEach(option => {
             statuses[option] = isCorrect ? 'correct' : 'incorrect';
         });
         setOptionStatuses(statuses);
-    
+
         // Use setTimeout to introduce a delay
         setTimeout(() => {
             if (currentQuestionIndex < quizData.length - 1) {
@@ -82,8 +101,8 @@ const QuizScreen = ({ route, navigation }) => {
             }
         }, 500);
     };
-    
-    
+
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <StatusBar barStyle="light-content" />
