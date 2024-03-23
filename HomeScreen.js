@@ -19,21 +19,23 @@ const quizData = [
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ScrollView contentContainerStyle={[styles.container, commonStyles.darkThemeBackground]}>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation}></QuizButton>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation}></QuizButton>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation}></QuizButton>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation}></QuizButton>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation}></QuizButton>
+    <ScrollView style={[commonStyles.darkThemeBackground, styles.scrollView]} contentContainerStyle={styles.container}>
+      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation} rating={5}></QuizButton>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1, // Make ScrollView expand to fill the space
+    // Set the background color to match the QuizButton or your theme
+    backgroundColor: '#041121', // Replace with the color that matches your design
+  },
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20, // Add some padding at the bottom for better scrolling experience
+    flexGrow: 1, // Ensure the container fills the height
+    alignItems: 'center', // Center items horizontally
+    paddingTop: 20, // Padding at the top
+    paddingBottom: 20, // Padding at the bottom
   },
 });
 
