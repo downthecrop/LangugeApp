@@ -27,7 +27,7 @@ const QuizButton = ({ quizData, imgUrl, title, subTitle, navigation, rating }) =
                 resizeMode="cover"
             >
                 <LinearGradient
-                    colors={['rgba(0,0,0,0.8)', 'transparent']}
+                    colors={['rgba(245, 217, 255,0.8)', 'rgba(0, 0, 0, 0.4)']}
                     style={styles.gradient}
                 >
                     <View style={styles.textContainer}>
@@ -42,19 +42,19 @@ const QuizButton = ({ quizData, imgUrl, title, subTitle, navigation, rating }) =
 };
 
 const styles = StyleSheet.create({
-  button: {
-    width: '90%', // Take 90% width of the parent
-    height: 100, // Height as shown in your image
-    marginBottom: 20, // Spacing between buttons
-    borderRadius: 16, // This rounds the corners
-    overflow: 'hidden', // This is required to clip the background image within the rounded corners
-    alignSelf: 'center', // Centers the button in the parent view
-},
-backgroundImage: {
-    flex: 1, // Use all available space
-    borderRadius: 16, // Match the borderRadius of the TouchableOpacity
-    justifyContent: 'flex-end', // Align content to bottom
-},
+    button: {
+        width: '90%', // Take 90% width of the parent
+        height: 100, // Height as shown in your image
+        marginBottom: 20, // Spacing between buttons
+        borderRadius: 16, // This rounds the corners
+        overflow: 'hidden', // This is required to clip the background image within the rounded corners
+        alignSelf: 'center', // Centers the button in the parent view
+    },
+    backgroundImage: {
+        flex: 1, // Use all available space
+        borderRadius: 16, // Match the borderRadius of the TouchableOpacity
+        justifyContent: 'flex-end', // Align content to bottom
+    },
     gradient: {
         flex: 1, // Use all available space
         justifyContent: 'center', // Center content vertically
@@ -64,21 +64,28 @@ backgroundImage: {
     },
     title: {
         color: 'white',
-        fontSize: 20, // Adjusted to match the design
+        fontSize: 20,
         fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', // Shadow color
+        textShadowOffset: { width: 0, height: 2 }, // Shadow offset
+        textShadowRadius: 3, // Shadow blur radius
     },
     subTitle: {
         color: 'white',
-        fontSize: 14, // Adjusted to match the design
+        fontSize: 14,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', // Shadow color
+        textShadowOffset: { width: 0, height: 1 }, // Shadow offset
+        textShadowRadius: 2, // Shadow blur radius
     },
+
     starsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end', // This aligns the stars to the right
-      marginTop: 5,
-      position: 'absolute', // Position the stars independently of the text
-      right: 10, // Right padding for the stars
-      bottom: 10, // Bottom padding for the stars
-  },
+        flexDirection: 'row',
+        justifyContent: 'flex-end', // This aligns the stars to the right
+        marginTop: 5,
+        position: 'absolute', // Position the stars independently of the text
+        right: 10, // Right padding for the stars
+        bottom: 10, // Bottom padding for the stars
+    },
 });
 
 export default QuizButton;

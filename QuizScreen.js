@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, BackHandler  } from 'react-native';
-import Animated, { Layout, FadeOut, FadeIn } from 'react-native-reanimated';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, BackHandler } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
+import { commonStyles } from './CommonStyles'; // Import common styles
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
@@ -11,11 +12,11 @@ const arraysMatch = (arr1, arr2) => {
 const OptionItem = ({ item, onSelect, status }) => {
     let backgroundColor;
     if (status === 'correct') {
-        backgroundColor = '#34A853'; // Green for correct
+        backgroundColor = '#7db14f'; // Green for correct
     } else if (status === 'incorrect') {
-        backgroundColor = '#a83434'; // Red for incorrect
+        backgroundColor = '#cd4b4b'; // Red for incorrect
     } else {
-        backgroundColor = '#2c3848'; // Default color
+        backgroundColor = '#4a4458'; // Default color
     }
 
     return (
@@ -41,6 +42,8 @@ const QuizScreen = ({ route, navigation }) => {
     const [answers, setAnswers] = useState([]);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
+    const progress = (currentQuestionIndex + 1) / quizData.length;
+
     const handleBackButtonPress = () => {
         Alert.alert(
             "Exit Quiz", // Alert Title
@@ -55,10 +58,28 @@ const QuizScreen = ({ route, navigation }) => {
         return true;
     };
 
+    // Initialize a shared value for the progress bar width
+    const progressBarWidth = useSharedValue(0);
+
+    useEffect(() => {
+        // Calculate the new width of the progress bar as a percentage
+        progressBarWidth.value = withTiming((currentQuestionIndex + 1) / quizData.length * 100, {
+            duration: 300, // Animation duration in milliseconds
+        });
+    }, [currentQuestionIndex, quizData.length]);
+
+    // Animated style for the progress bar
+    const animatedProgressBarStyle = useAnimatedStyle(() => {
+        return {
+            width: `${progressBarWidth.value}%`,
+        };
+    });
+
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress);
         return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress);
     }, [navigation]);
+
 
     const handleOptionSelection = (selectedOption) => {
         if (answers.includes(selectedOption)) {
@@ -104,30 +125,29 @@ const QuizScreen = ({ route, navigation }) => {
 
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <StatusBar barStyle="light-content" />
-            <View style={styles.questionContainer}>
-                <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+        <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
+            <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
+                <View style={styles.questionContainer}>
+                    <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+                </View>
+                <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
+                    {answers.map(answer => (
+                        <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
+                    ))}
+                </Animated.View>
+                <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
+                    {options.map(option => (
+                        <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
+                    ))}
+                </Animated.View>
+                <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
+                    <Text style={styles.checkButtonText}>Check Answers</Text>
+                </TouchableOpacity>
+            </ScrollView>
+            <View style={styles.progressBarContainer}>
+                <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
             </View>
-            <Text style={styles.title}>Your Answers</Text>
-            <Animated.View style={[styles.optionsContainer, { borderBottomColor: 'white', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
-                {answers.map(answer => (
-                    <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
-                ))}
-            </Animated.View>
-            <Text style={styles.title}>Options</Text>
-            <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
-                {options.map(option => (
-                    <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
-                ))}
-            </Animated.View>
-            <View style={styles.counterContainer}>
-                <Text style={styles.counterText}>Correct Answers: {correctAnswersCount}</Text>
-            </View>
-            <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
-                <Text style={styles.checkButtonText}>Check Answers</Text>
-            </TouchableOpacity>
-        </ScrollView>
+        </View>
     );
 };
 
@@ -136,8 +156,10 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingTop: 50,
         paddingHorizontal: 20,
-        backgroundColor: '#041121',
         justifyContent: 'space-between', // Adjust to space content
+    },
+    wrapper: {
+        flexGrow: 1,
     },
     questionContainer: {
         marginTop: 20,
@@ -161,9 +183,9 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     optionItem: {
-        padding: 10,
-        borderRadius: 4,
-        margin: 5,
+        padding: 14,
+        borderRadius: 24,
+        margin: 6,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -171,10 +193,15 @@ const styles = StyleSheet.create({
         color: '#f9feff',
         fontSize: 18,
     },
-    counterContainer: {
+    progressBarContainer: {
+        height: 4,
         marginTop: 20,
-        alignItems: 'center',
-        padding: 10,
+        width: '100%',
+        backgroundColor: '#49454f',
+    },
+    progressBar: {
+        height: '100%',
+        backgroundColor: '#d0bcff',
     },
     counterText: {
         color: '#fdfffc',
@@ -182,14 +209,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     checkButtonLarge: { // Adjusted style for the larger check button
-        backgroundColor: '#34A853', // Example color, adjust as needed
+        backgroundColor: '#4f378b', // Example color, adjust as needed
         paddingVertical: 15, // Increased padding for a taller button
         paddingHorizontal: 20, // Increased padding for a wider button
-        borderRadius: 10, // Rounded corners
+        borderRadius: 24, // Rounded corners
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        marginBottom: 30, // Space from bottom
         alignSelf: 'stretch', // Stretch to the container's width
     },
     checkButtonText: {

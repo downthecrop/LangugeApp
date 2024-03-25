@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native'; // Import ScrollView
+import { ScrollView, StyleSheet, StatusBar } from 'react-native'; // Import ScrollView
 import { commonStyles } from './CommonStyles'; // Import common styles
 import QuizButton from './QuizButton';
 
@@ -19,17 +19,26 @@ const quizData = [
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ScrollView style={[commonStyles.darkThemeBackground, styles.scrollView]} contentContainerStyle={styles.container}>
-      <QuizButton quizData={quizData} imgUrl={require("./assets/bg.webp")} title="Start Sino Numbers Quiz" subTitle="Tap to begin!" navigation={navigation} rating={5}></QuizButton>
-    </ScrollView>
+    <>
+      <StatusBar barStyle="light-content" backgroundColor="#1c1b1f" />
+      <ScrollView style={[commonStyles.darkThemeBackground, styles.scrollView]} contentContainerStyle={styles.container}>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/1.png")} title="Sino Korean Numbers" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/3.png")} title="Native Korean Number" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/2.png")} title="Days of the Week" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/5.png")} title="Months of the Year" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/5.png")} title="Ages" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #1" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #2" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #3" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
+        <QuizButton quizData={quizData} imgUrl={require("./assets/6.png")} title="Korean Counters" subTitle="Essential Words to Use with Numbers" navigation={navigation} rating={0}></QuizButton>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1, // Make ScrollView expand to fill the space
-    // Set the background color to match the QuizButton or your theme
-    backgroundColor: '#041121', // Replace with the color that matches your design
   },
   container: {
     flexGrow: 1, // Ensure the container fills the height
