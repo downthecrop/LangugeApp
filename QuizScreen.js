@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     checkButtonLarge: { // Adjusted style for the larger check button
-        backgroundColor: '#4f378b', // Example color, adjust as needed
+        backgroundColor: '#d0bcff', // Example color, adjust as needed
         paddingVertical: 15, // Increased padding for a taller button
         paddingHorizontal: 20, // Increased padding for a wider button
         borderRadius: 24, // Rounded corners
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch', // Stretch to the container's width
     },
     checkButtonText: {
-        color: '#FFFFFF',
+        color: '#381e72',
         fontSize: 20,
         fontWeight: 'bold',
     },
