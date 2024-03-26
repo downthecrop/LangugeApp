@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, StatusBar } from 'react-native'; // Import ScrollView
 import { commonStyles } from './CommonStyles'; // Import common styles
 import QuizButton from './QuizButton';
+import { useNavigation } from '@react-navigation/native';
 
 const quizData = [
   {
@@ -17,7 +18,8 @@ const quizData = [
   // Add more questions as needed
 ];
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
+  const navigation = useNavigation(); // Get the navigation object
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#1c1b1f" />

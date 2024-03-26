@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { commonStyles } from './CommonStyles'; // Import common styles
+import { Button, Dialog, Portal, PaperProvider, Provider } from 'react-native-paper';
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
@@ -34,29 +35,33 @@ const OptionItem = ({ item, onSelect, status }) => {
 };
 
 
+
 const QuizScreen = ({ route, navigation }) => {
     const { quizData } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [options, setOptions] = useState(quizData[currentQuestionIndex].options);
+    const [options, setOptions] = useState([]);
     const [optionStatuses, setOptionStatuses] = useState({});
     const [answers, setAnswers] = useState([]);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+    const [exitDialogVisible, setExitDialogVisible] = useState(false);
+    const [completionDialogVisible, setCompletionDialogVisible] = useState(false);
 
-    const progress = (currentQuestionIndex + 1) / quizData.length;
+
+    useEffect(() => {
+        setOptions(quizData[currentQuestionIndex].options);
+    }, [currentQuestionIndex, quizData]);
 
     const handleBackButtonPress = () => {
-        Alert.alert(
-            "Exit Quiz", // Alert Title
-            "Are you sure you want to exit the quiz?", // Alert Message
-            [
-                { text: "Cancel", onPress: () => { }, style: "cancel" },
-                { text: "Yes", onPress: () => navigation.goBack() },
-            ],
-            { cancelable: true }
-        );
-
+        setExitDialogVisible(true); // Show the dialog
         return true;
     };
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress);
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress);
+        };
+    }, []);
 
     // Initialize a shared value for the progress bar width
     const progressBarWidth = useSharedValue(0);
@@ -74,11 +79,6 @@ const QuizScreen = ({ route, navigation }) => {
             width: `${progressBarWidth.value}%`,
         };
     });
-
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress);
-        return () => BackHandler.removeEventListener('hardwareBackPress', handleBackButtonPress);
-    }, [navigation]);
 
 
     const handleOptionSelection = (selectedOption) => {
@@ -114,9 +114,7 @@ const QuizScreen = ({ route, navigation }) => {
             } else {
                 setCorrectAnswersCount(prevCount => {
                     const newCount = isCorrect ? prevCount + 1 : prevCount;
-                    Alert.alert("Quiz Completed", `You've completed all questions!\nCorrect Answers: ${newCount}/${quizData.length}`, [
-                        { text: "See Summary", onPress: () => navigation.replace('Summary', { score: newCount, totalQuestions: quizData.length }) }
-                    ]);
+                    setCompletionDialogVisible(true);
                     return newCount;
                 });
             }
@@ -125,29 +123,59 @@ const QuizScreen = ({ route, navigation }) => {
 
 
     return (
-        <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
-            <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
-                <View style={styles.questionContainer}>
-                    <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+        <Provider>
+            <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
+                <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
+                    <View style={styles.questionContainer}>
+                        <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+                    </View>
+                    <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
+                        {answers.map(answer => (
+                            <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
+                        ))}
+                    </Animated.View>
+                    <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
+                        {options.map(option => (
+                            <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
+                        ))}
+                    </Animated.View>
+                    <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
+                        <Text style={styles.checkButtonText}>Check Answers</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+                <View style={styles.progressBarContainer}>
+                    <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
                 </View>
-                <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
-                    {answers.map(answer => (
-                        <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
-                    ))}
-                </Animated.View>
-                <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
-                    {options.map(option => (
-                        <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
-                    ))}
-                </Animated.View>
-                <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
-                    <Text style={styles.checkButtonText}>Check Answers</Text>
-                </TouchableOpacity>
-            </ScrollView>
-            <View style={styles.progressBarContainer}>
-                <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
+                <Portal>
+                    <Dialog visible={exitDialogVisible} onDismiss={() => setExitDialogVisible(false)}>
+                        <Dialog.Title>Exit Quiz</Dialog.Title>
+                        <Dialog.Content>
+                            <Text>Are you sure you want to exit the quiz?</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={() => setExitDialogVisible(false)}>Cancel</Button>
+                            <Button onPress={() => {
+                                setExitDialogVisible(false);
+                                navigation.goBack();
+                            }}>Yes</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                    <Dialog visible={completionDialogVisible} onDismiss={() => setCompletionDialogVisible(false)}>
+                        <Dialog.Title>Quiz Completed</Dialog.Title>
+                        <Dialog.Content>
+                            <Text>You've completed all questions!</Text>
+                            <Text>Correct Answers: {correctAnswersCount}/{quizData.length}</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={() => {
+                                setCompletionDialogVisible(false);
+                                navigation.replace('Summary', { score: correctAnswersCount, totalQuestions: quizData.length });
+                            }}>See Summary</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
             </View>
-        </View>
+        </Provider>
     );
 };
 
