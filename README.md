@@ -13,7 +13,9 @@ Welcome to HanaCount, a React Native app for mastering Korean numbers! With supp
 ## Setup
 
 `git clone https://github.com/downthecrop/LangugeApp`
+
 `cd HanaCount`
+
 `npm install`
 
 
