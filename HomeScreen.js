@@ -41,12 +41,14 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1, // Make ScrollView expand to fill the space
+    backgroundColor: '#1c1b1f',
   },
   container: {
     flexGrow: 1, // Ensure the container fills the height
     alignItems: 'center', // Center items horizontally
     paddingTop: 20, // Padding at the top
     paddingBottom: 20, // Padding at the bottom
+    backgroundColor: '#1c1b1f',
   },
 });
 

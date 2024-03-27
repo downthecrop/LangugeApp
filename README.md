@@ -26,6 +26,7 @@ You can launch the app in the browser but it is intended for Android/iOS Mobile 
 `npm start`
 
 `a` -- Launch on Android Device/Simulator
+
 `w` -- Launch in the browser
 
 ## Midjourney V6 Image Prompt
