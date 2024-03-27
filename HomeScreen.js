@@ -3,20 +3,7 @@ import { ScrollView, StyleSheet, StatusBar } from 'react-native'; // Import Scro
 import { commonStyles } from './CommonStyles'; // Import common styles
 import QuizButton from './QuizButton';
 import { useNavigation } from '@react-navigation/native';
-
-const quizData = [
-  {
-    question: "What is the first question?",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    correctAnswers: ["Option 3", "Option 2"],
-  },
-  {
-    question: "What is the second question?",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    correctAnswers: ["Option A", "Option C"],
-  },
-  // Add more questions as needed
-];
+import quizData from './QuizData';
 
 const HomeScreen = () => {
   const navigation = useNavigation(); // Get the navigation object

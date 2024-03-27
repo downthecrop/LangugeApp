@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "657297089143",
+    "project_id": "hanacount-4acaf",
+    "storage_bucket": "hanacount-4acaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657297089143:android:30befad3858c5177cb1c72",
+        "android_client_info": {
+          "package_name": "com.mathx.hanacount"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYszbZzu_8jdmB-ZhJ3CtVH_oRlJwk1LI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

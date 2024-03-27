@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, BackHandler } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { commonStyles } from './CommonStyles'; // Import common styles
-import { Button, Dialog, Portal, PaperProvider, Provider } from 'react-native-paper';
+import { Button, Text, Dialog, Portal, PaperProvider, Provider } from 'react-native-paper';
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 

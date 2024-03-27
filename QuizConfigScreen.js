@@ -5,6 +5,8 @@ import { commonStyles } from './CommonStyles';
 import { SegmentedButtons, Divider, Portal, Modal, Checkbox, Icon } from 'react-native-paper';
 
 import { DarkTheme as PaperDarkTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import quizData from './QuizData';
 
 const theme = {
     ...PaperDarkTheme,
@@ -21,6 +23,7 @@ const theme = {
 };
 
 const QuizConfigScreen = () => {
+    const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
 
@@ -73,7 +76,6 @@ const QuizConfigScreen = () => {
                     <Divider />
 
                     <View style={styles.audioToggle}>
-                        <Text style={styles.text}>Audio Questions:</Text>
                         <View style={styles.segmentedControl}>
                             <SegmentedButtons
                                 value={value}
@@ -100,7 +102,7 @@ const QuizConfigScreen = () => {
                         </View>
                     </View>
 
-                    <Button mode="contained" onPress={() => console.log('Start Quiz')}>Start Quiz</Button>
+                    <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData })}>Start Quiz</Button>
                 </View>
             </View>
         </Provider>
