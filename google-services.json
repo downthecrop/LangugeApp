@@ -12,7 +12,36 @@
           "package_name": "com.mathx.hanacount"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "657297089143-6kd7j90rhocmo6j90ejrebst9o0phst8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mathx.hanacount",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "657297089143-obnt9i91g5na27nsi27ipljpbb1ih8ms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mathx.hanacount",
+            "certificate_hash": "a3b6dbb0cc5a1fc3b4a58439c5c28cd28544aed3"
+          }
+        },
+        {
+          "client_id": "657297089143-v4208kf1d1m5teblm6m5g84md4kkcisk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mathx.hanacount",
+            "certificate_hash": "c1ed15522f3dc58c3ee11ffc88160751611beb01"
+          }
+        },
+        {
+          "client_id": "657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCYszbZzu_8jdmB-ZhJ3CtVH_oRlJwk1LI"
@@ -20,7 +49,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "657297089143-e5moe61v2uvcldveqj91db5ad4bdi323.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mathx.hanacount"
+              }
+            }
+          ]
         }
       }
     }

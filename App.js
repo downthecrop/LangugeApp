@@ -11,9 +11,6 @@ import { useTheme } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 import QuizConfigScreen from './QuizConfigScreen';
 
-import firebase from 'firebase/app';
-import 'firebase/auth';
-
 const Stack = createNativeStackNavigator();
 
 const HomeRoute = () => <HomeScreen />;

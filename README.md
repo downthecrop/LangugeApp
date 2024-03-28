@@ -1,3 +1,7 @@
+npx react-native doctor
+
+expo run:android
+
 
 # HanaCount
 
