@@ -11,15 +11,17 @@ const HomeScreen = () => {
     <>
       <StatusBar barStyle="light-content" backgroundColor="#1c1b1f" />
       <ScrollView style={[commonStyles.darkThemeBackground, styles.scrollView]} contentContainerStyle={styles.container}>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/1.png")} title="Sino Korean Numbers" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/3.png")} title="Native Korean Number" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/2.png")} title="Days of the Week" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/5.png")} title="Months of the Year" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/5.png")} title="Ages" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #1" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #2" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/4.png")} title="Money Values #3" subTitle="Tap to begin!" navigation={navigation} rating={0}></QuizButton>
-        <QuizButton quizData={quizData} imgUrl={require("./assets/6.png")} title="Korean Counters" subTitle="Essential Words to Use with Numbers" navigation={navigation} rating={0}></QuizButton>
+        {quizData.map((quiz, index) => (
+          <QuizButton
+            key={index} // Consider using a more unique key if available
+            quizData={quiz.questions} // Assuming you want to pass the entire quiz object
+            imgUrl={quiz.imgUrl}
+            title={quiz.title}
+            subTitle={quiz.subTitle}
+            navigation={navigation}
+            rating={quiz.rating}
+          />
+        ))}
       </ScrollView>
     </>
   );

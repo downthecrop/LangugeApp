@@ -11,6 +11,8 @@ const QuizConfigScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
 
+    const questions = quizData[0].questions;
+
     const units = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Unit 7', 'Unit 8', 'Unit 9', 'Unit 10', 'Unit 11']; // Example units
     const [value, setValue] = React.useState('train');
 
@@ -84,7 +86,7 @@ const QuizConfigScreen = () => {
                     </View>
                 </View>
 
-                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData })}>Start Quiz</Button>
+                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { questions })}>Start Quiz</Button>
             </View>
         </View>
     );

@@ -7,7 +7,7 @@ GoogleSignin.configure({
   webClientId: '657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com',
 });
 
-const DummyPage2 = () => {
+const UserPage = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DummyPage2;
+export default UserPage;
