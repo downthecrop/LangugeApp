@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { commonStyles } from './CommonStyles'; // Import common styles
-import { Button, Text, Dialog, Portal, PaperProvider, Provider } from 'react-native-paper';
+import { Button, Text, Dialog, Portal } from 'react-native-paper';
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
@@ -123,59 +123,57 @@ const QuizScreen = ({ route, navigation }) => {
 
 
     return (
-        <Provider>
-            <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
-                <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
-                    <View style={styles.questionContainer}>
-                        <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
-                    </View>
-                    <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
-                        {answers.map(answer => (
-                            <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
-                        ))}
-                    </Animated.View>
-                    <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
-                        {options.map(option => (
-                            <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
-                        ))}
-                    </Animated.View>
-                    <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
-                        <Text style={styles.checkButtonText}>Check Answers</Text>
-                    </TouchableOpacity>
-                </ScrollView>
-                <View style={styles.progressBarContainer}>
-                    <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
+        <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
+            <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
+                <View style={styles.questionContainer}>
+                    <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
                 </View>
-                <Portal>
-                    <Dialog visible={exitDialogVisible} onDismiss={() => setExitDialogVisible(false)}>
-                        <Dialog.Title>Exit Quiz</Dialog.Title>
-                        <Dialog.Content>
-                            <Text>Are you sure you want to exit the quiz?</Text>
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={() => setExitDialogVisible(false)}>Cancel</Button>
-                            <Button onPress={() => {
-                                setExitDialogVisible(false);
-                                navigation.goBack();
-                            }}>Yes</Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                    <Dialog visible={completionDialogVisible} onDismiss={() => setCompletionDialogVisible(false)}>
-                        <Dialog.Title>Quiz Completed</Dialog.Title>
-                        <Dialog.Content>
-                            <Text>You've completed all questions!</Text>
-                            <Text>Correct Answers: {correctAnswersCount}/{quizData.length}</Text>
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={() => {
-                                setCompletionDialogVisible(false);
-                                navigation.replace('Summary', { score: correctAnswersCount, totalQuestions: quizData.length });
-                            }}>See Summary</Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal>
+                <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
+                    {answers.map(answer => (
+                        <OptionItem key={answer} item={answer} onSelect={handleOptionSelection} status={optionStatuses[answer]} />
+                    ))}
+                </Animated.View>
+                <Animated.View style={styles.optionsContainer} layout={commonSpringLayout}>
+                    {options.map(option => (
+                        <OptionItem key={option} item={option} onSelect={handleOptionSelection} />
+                    ))}
+                </Animated.View>
+                <TouchableOpacity style={styles.checkButtonLarge} onPress={checkAnswers}>
+                    <Text style={styles.checkButtonText}>Check Answers</Text>
+                </TouchableOpacity>
+            </ScrollView>
+            <View style={styles.progressBarContainer}>
+                <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
             </View>
-        </Provider>
+            <Portal>
+                <Dialog visible={exitDialogVisible} onDismiss={() => setExitDialogVisible(false)}>
+                    <Dialog.Title>Exit Quiz</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>Are you sure you want to exit the quiz?</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => setExitDialogVisible(false)}>Cancel</Button>
+                        <Button onPress={() => {
+                            setExitDialogVisible(false);
+                            navigation.goBack();
+                        }}>Yes</Button>
+                    </Dialog.Actions>
+                </Dialog>
+                <Dialog visible={completionDialogVisible} onDismiss={() => setCompletionDialogVisible(false)}>
+                    <Dialog.Title>Quiz Completed</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>You've completed all questions!</Text>
+                        <Text>Correct Answers: {correctAnswersCount}/{quizData.length}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => {
+                            setCompletionDialogVisible(false);
+                            navigation.replace('Summary', { score: correctAnswersCount, totalQuestions: quizData.length });
+                        }}>See Summary</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+        </View>
     );
 };
 

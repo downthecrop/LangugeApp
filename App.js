@@ -1,12 +1,12 @@
 import React from 'react';
 import { DarkTheme, View, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BottomNavigation, Text, PaperProvider } from 'react-native-paper';
+import { BottomNavigation, Text, PaperProvider, Provider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from './HomeScreen';
 import QuizScreen from './QuizScreen';
 import SummaryScreen from './SummaryScreen';
-import DummyPage2 from './DummyPage'; // Assuming the correct import path is './DummyPage'
+import DummyPage2 from './DummyPage2';
 import { useTheme } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 import QuizConfigScreen from './QuizConfigScreen';
@@ -58,18 +58,20 @@ const MainTabs = () => {
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: commonStyles.darkThemeBackground,
-          headerTintColor: commonStyles.lightText.color,
-          headerTitleStyle: commonStyles.titleText,
-          animation: 'slide_from_right',
-        }}
-      >
-        <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Quiz" component={QuizScreen} />
-        <Stack.Screen name="Summary" component={SummaryScreen} />
-      </Stack.Navigator>
+      <Provider>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: commonStyles.darkThemeBackground,
+            headerTintColor: commonStyles.lightText.color,
+            headerTitleStyle: commonStyles.titleText,
+            animation: 'slide_from_right',
+          }}
+        >
+          <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="Quiz" component={QuizScreen} />
+          <Stack.Screen name="Summary" component={SummaryScreen} />
+        </Stack.Navigator>
+      </Provider>
     </NavigationContainer>
   );
 };
