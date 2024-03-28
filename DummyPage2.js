@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
+import { Text } from 'react-native-paper';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
@@ -35,21 +36,33 @@ const DummyPage2 = () => {
     }
   };
 
+  const _signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+      setUserInfo(null); // Remove user info from state, effectively 'unauthenticating' the user
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={_signIn}
-        disabled={isSigninInProgress}
-      />
       {userInfo ? (
-        <View>
+        <>
           <Text style={styles.userInfo}>Welcome, {userInfo.user.name}!</Text>
           <Text style={styles.userInfo}>Email: {userInfo.user.email}</Text>
-        </View>
+          <Button title="Sign Out" onPress={_signOut} />
+        </>
       ) : (
-        <Text style={styles.text}>Please sign in</Text>
+        <>
+          <GoogleSigninButton
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={_signIn}
+            disabled={isSigninInProgress}
+          />
+          <Text style={styles.text}>Please sign in</Text>
+        </>
       )}
     </View>
   );

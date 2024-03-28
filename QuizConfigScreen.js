@@ -1,26 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Appbar, Button, Menu, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 import { SegmentedButtons, Divider, Portal, Modal, Checkbox, Icon } from 'react-native-paper';
-
-import { DarkTheme as PaperDarkTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import quizData from './QuizData';
-
-const theme = {
-    ...PaperDarkTheme,
-    colors: {
-        ...PaperDarkTheme,
-        primary: '#BB86FC',  // Purple, for example
-        accent: '#03DAC6',   // Teal, for example
-        background: '#121212', // Dark background
-        surface: '#1E1E1E',   // Dark surface
-        text: '#FFFFFF',     // White text for readability
-        onSurface: 'white',
-        // Add other color overrides for dark theme if necessary
-    },
-};
 
 const QuizConfigScreen = () => {
     const navigation = useNavigation();
@@ -78,7 +62,6 @@ const QuizConfigScreen = () => {
                     <View style={styles.segmentedControl}>
                         <SegmentedButtons
                             value={value}
-                            theme={theme}
                             onValueChange={setValue}
                             buttons={[
                                 {
