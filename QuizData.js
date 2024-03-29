@@ -7,6 +7,7 @@ const quizData = [
     questions: [
       {
         question: "What is the second question?",
+        audio:  require("./assets/taunt.wav"),
         options: ["Option A", "Option B", "Option C", "Option D"],
         correctAnswers: ["Option A", "Option C"],
       },

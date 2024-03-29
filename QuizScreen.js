@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { commonStyles } from './CommonStyles';
-import { Button, Text, Dialog, Portal } from 'react-native-paper';
+import { Button, Text, Dialog, Portal, Icon } from 'react-native-paper';
 import OptionItem from './OptionItem';
 import ProgressBar from './ProgressBar';
+import Sound from 'react-native-sound'; // Assuming you're using react-native-sound
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
@@ -78,12 +79,38 @@ const QuizScreen = ({ route, navigation }) => {
         }, 500);
     };
 
+    const playAudio = (audio) => {
+        console.log("Attempting to play: " + audio);
+        var audio = new Sound(
+            audio,
+            error => {
+                if (error) {
+                    console.log('failed to load the sound', error);
+                    return;
+                }
+                // if loaded successfully
+                console.log(
+                    'duration in seconds: ' +
+                    audio.getDuration() +
+                    'number of channels: ' +
+                    audio.getNumberOfChannels(),
+                );
+                audio.play()
+            },
+        );
+    };
 
     return (
         <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
             <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
                 <View style={styles.questionContainer}>
-                    <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+                    {quizData[currentQuestionIndex].audio ? (
+                        <Button onPress={() => playAudio(quizData[currentQuestionIndex].audio)}>
+                            <Text>Test</Text>
+                        </Button>
+                    ) : (
+                        <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+                    )}
                 </View>
                 <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
                     {answers.map(answer => (
