@@ -105,9 +105,13 @@ const QuizScreen = ({ route, navigation }) => {
             <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
                 <View style={styles.questionContainer}>
                     {quizData[currentQuestionIndex].audio ? (
-                        <Button onPress={() => playAudio(quizData[currentQuestionIndex].audio)}>
-                            <Text>Test</Text>
-                        </Button>
+                        <TouchableOpacity onPress={() => playAudio(quizData[currentQuestionIndex].audio)}>
+                            <Icon
+                                source="volume-high"
+                                color={'#e8def8'}
+                                size={120}
+                            />
+                        </TouchableOpacity>
                     ) : (
                         <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
                     )}
