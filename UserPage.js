@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
 import { Text } from 'react-native-paper';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import useStore from './store';
 
 GoogleSignin.configure({
   webClientId: '657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com',
@@ -10,6 +11,7 @@ GoogleSignin.configure({
 const UserPage = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const { counter, increaseCounter, decreaseCounter } = useStore();
 
   useEffect(() => {
     const checkSignIn = async () => {
@@ -62,6 +64,9 @@ const UserPage = () => {
             disabled={isSigninInProgress}
           />
           <Text style={styles.text}>Please sign in</Text>
+          <Text>Counter: {counter}</Text>
+      <Button title="Increase" onPress={increaseCounter} />
+      <Button title="Decrease" onPress={decreaseCounter} />
         </>
       )}
     </View>
