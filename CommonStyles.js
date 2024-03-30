@@ -36,14 +36,14 @@ export const commonStyles = StyleSheet.create({
     fontSize: 18,
   },
   styledButton: {
-    backgroundColor: '#d0bcff', // Example button color
+    backgroundColor: '#d0bcff',
     padding: 14,
     borderRadius: 24,
-    alignItems: 'center', // Centers the text inside the button
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 16,
-    color: '#381e72', // Example text color
+    color: '#381e72',
   },
   defaultContainer: {
       flex: 1,

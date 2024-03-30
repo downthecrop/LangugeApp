@@ -1,10 +1,10 @@
 import React from 'react';
 import { BottomNavigation, Text, PaperProvider, Provider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from './HomeScreen';
-import UserPage from './UserPage';
+import HomeScreen from '../HomeScreen';
+import UserPage from '../UserPage';
 import { useTheme } from 'react-native-paper';
-import QuizConfigScreen from './QuizConfigScreen';
+import QuizConfigScreen from '../QuizConfigScreen';
 
 const HomeRoute = () => <HomeScreen />;
 const QuizConfigRoute = () => <QuizConfigScreen />;
@@ -34,11 +34,9 @@ const BottomNav = () => {
 
   return (
     <BottomNavigation
-      //sceneAnimationEnabled={true}
-      //sceneAnimationType="opacity"
       barStyle={{ backgroundColor: '#2c2831' }}
-      activeColor="white" // Active item text and icon color
-      inactiveColor="rgba(255, 255, 255, 0.01)" // Inactive item text and icon color
+      activeColor="white"
+      inactiveColor="rgba(255, 255, 255, 0.01)"
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}

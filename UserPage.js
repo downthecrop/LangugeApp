@@ -3,6 +3,8 @@ import { View, StyleSheet, Button } from 'react-native'; // Import Button from r
 import { Text } from 'react-native-paper';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import useStore from './store';
+import { List, MD3Colors } from 'react-native-paper';
+import { commonStyles } from './CommonStyles';
 
 GoogleSignin.configure({
   webClientId: '657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com',
@@ -11,7 +13,6 @@ GoogleSignin.configure({
 const UserPage = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const { counter, increaseCounter, decreaseCounter } = useStore();
 
   useEffect(() => {
     const checkSignIn = async () => {
@@ -48,7 +49,8 @@ const UserPage = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+    <View style={[commonStyles.defaultContainer, commonStyles.darkThemeBackground]}>
       {userInfo ? (
         <>
           <Text style={styles.userInfo}>Welcome, {userInfo.user.name}!</Text>
@@ -64,22 +66,24 @@ const UserPage = () => {
             disabled={isSigninInProgress}
           />
           <Text style={styles.text}>Please sign in</Text>
-          <Text>Counter: {counter}</Text>
-      <Button title="Increase" onPress={increaseCounter} />
-      <Button title="Decrease" onPress={decreaseCounter} />
         </>
       )}
     </View>
+    <List.Section>
+    <List.Subheader>Some title</List.Subheader>
+    <List.Item title="First Item" left={() => <List.Icon icon="folder" />} />
+    <List.Item
+      title="Second Item"
+      left={() => <List.Icon color={MD3Colors.tertiary70} icon="folder" />}
+    />
+  </List.Section>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   text: {
+    color:'white',
     fontSize: 20,
   },
   userInfo: {

@@ -12,8 +12,6 @@ const QuizConfigScreen = () => {
     const [selectedUnits, setSelectedUnits] = useState({});
 
     const questions = quizData[0].questions;
-
-    const units = ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Unit 7', 'Unit 8', 'Unit 9', 'Unit 10', 'Unit 11']; // Example units
     const [value, setValue] = React.useState('train');
 
     const handleUnitToggle = (unit) => {
@@ -43,12 +41,12 @@ const QuizConfigScreen = () => {
                             contentContainerStyle={styles.modalContainer}
                         >
                             <ScrollView>
-                                {units.map((unit, index) => (
+                                {quizData.map((quiz, index) => (
                                     <View key={index} style={styles.modalItem}>
-                                        <Text style={styles.text}>{unit}</Text>
+                                        <Text style={styles.text}>{quiz.title}</Text>
                                         <Checkbox
-                                            status={selectedUnits[unit] ? 'checked' : 'unchecked'}
-                                            onPress={() => handleUnitToggle(unit)}
+                                            status={selectedUnits[quiz] ? 'checked' : 'unchecked'}
+                                            onPress={() => handleUnitToggle(quiz)}
                                         />
                                     </View>
                                 ))}
@@ -128,8 +126,8 @@ const styles = StyleSheet.create({
     },
     iconTextContainer: {
         marginTop: 120,
-        alignItems: 'center', // Center the icon and text horizontally
-        justifyContent: 'center', // Center the icon and text vertically
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

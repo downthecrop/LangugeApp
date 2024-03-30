@@ -3,9 +3,10 @@ import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'rea
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { commonStyles } from './CommonStyles';
 import { Button, Text, Dialog, Portal, Icon } from 'react-native-paper';
-import OptionItem from './OptionItem';
-import ProgressBar from './ProgressBar';
-import Sound from 'react-native-sound'; // Assuming you're using react-native-sound
+import OptionItem from './components/OptionItem';
+import ProgressBar from './components/ProgressBar';
+import Sound from 'react-native-sound';
+import useStore from './store';
 
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
@@ -14,7 +15,7 @@ const arraysMatch = (arr1, arr2) => {
 };
 
 const QuizScreen = ({ route, navigation }) => {
-    const { quizData } = route.params;
+    const { quizData: quiz } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [options, setOptions] = useState([]);
     const [optionStatuses, setOptionStatuses] = useState({});
@@ -22,11 +23,12 @@ const QuizScreen = ({ route, navigation }) => {
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
     const [exitDialogVisible, setExitDialogVisible] = useState(false);
     const [completionDialogVisible, setCompletionDialogVisible] = useState(false);
+    const setScore = useStore((state) => state.setScore);
 
 
     useEffect(() => {
-        setOptions(quizData[currentQuestionIndex].options);
-    }, [currentQuestionIndex, quizData]);
+        setOptions(quiz.questions[currentQuestionIndex].options);
+    }, [currentQuestionIndex, quiz]);
 
     const handleBackButtonPress = () => {
         setExitDialogVisible(true);
@@ -40,6 +42,13 @@ const QuizScreen = ({ route, navigation }) => {
         };
     }, []);
 
+    useEffect(() => {
+        const currentQuestionAudio = quiz.questions[currentQuestionIndex].audio;
+        if (currentQuestionAudio) {
+            playAudio(currentQuestionAudio);
+        }
+    }, [currentQuestionIndex]);
+
 
     const handleOptionSelection = (selectedOption) => {
         if (answers.includes(selectedOption)) {
@@ -50,8 +59,9 @@ const QuizScreen = ({ route, navigation }) => {
             setAnswers([...answers, selectedOption]);
         }
     };
+
     const checkAnswers = () => {
-        const isCorrect = arraysMatch(answers, quizData[currentQuestionIndex].correctAnswers);
+        const isCorrect = arraysMatch(answers, quiz.questions[currentQuestionIndex].correctAnswers);
 
         let statuses = {};
         answers.forEach(option => {
@@ -60,19 +70,20 @@ const QuizScreen = ({ route, navigation }) => {
         setOptionStatuses(statuses);
 
         setTimeout(() => {
-            if (currentQuestionIndex < quizData.length - 1) {
+            if (currentQuestionIndex < quiz.questions.length - 1) {
                 if (isCorrect) {
                     setCorrectAnswersCount(prevCount => prevCount + 1);
                 }
                 const nextIndex = currentQuestionIndex + 1;
                 setCurrentQuestionIndex(nextIndex);
-                setOptions(quizData[nextIndex].options);
+                setOptions(quiz.questions[nextIndex].options);
                 setAnswers([]);
                 setOptionStatuses({});
             } else {
                 setCorrectAnswersCount(prevCount => {
                     const newCount = isCorrect ? prevCount + 1 : prevCount;
                     setCompletionDialogVisible(true);
+                    setScore(quiz.title, newCount, quiz.questions.length);
                     return newCount;
                 });
             }
@@ -88,7 +99,6 @@ const QuizScreen = ({ route, navigation }) => {
                     console.log('failed to load the sound', error);
                     return;
                 }
-                // if loaded successfully
                 console.log(
                     'duration in seconds: ' +
                     audio.getDuration() +
@@ -104,8 +114,8 @@ const QuizScreen = ({ route, navigation }) => {
         <View style={[commonStyles.darkThemeBackground, styles.wrapper]}>
             <ScrollView contentContainerStyle={[commonStyles.darkThemeBackground, styles.container]}>
                 <View style={styles.questionContainer}>
-                    {quizData[currentQuestionIndex].audio ? (
-                        <TouchableOpacity onPress={() => playAudio(quizData[currentQuestionIndex].audio)}>
+                    {quiz.questions[currentQuestionIndex].audio ? (
+                        <TouchableOpacity onPress={() => playAudio(quiz.questions[currentQuestionIndex].audio)}>
                             <Icon
                                 source="volume-high"
                                 color={'#e8def8'}
@@ -113,7 +123,7 @@ const QuizScreen = ({ route, navigation }) => {
                             />
                         </TouchableOpacity>
                     ) : (
-                        <Text style={styles.questionText}>{quizData[currentQuestionIndex].question}</Text>
+                        <Text style={styles.questionText}>{quiz.questions[currentQuestionIndex].question}</Text>
                     )}
                 </View>
                 <Animated.View style={[styles.optionsContainer, { borderBottomColor: '#3c4045', borderBottomWidth: 1 }]} layout={commonSpringLayout}>
@@ -130,7 +140,7 @@ const QuizScreen = ({ route, navigation }) => {
                     <Text style={styles.checkButtonText}>Check Answers</Text>
                 </TouchableOpacity>
             </ScrollView>
-            <ProgressBar currentQuestionIndex={currentQuestionIndex} quizData={quizData} />
+            <ProgressBar currentQuestionIndex={currentQuestionIndex} quizData={quiz.questions} />
             <Portal>
                 <Dialog visible={exitDialogVisible} onDismiss={() => setExitDialogVisible(false)}>
                     <Dialog.Title>Exit Quiz</Dialog.Title>
@@ -148,13 +158,13 @@ const QuizScreen = ({ route, navigation }) => {
                 <Dialog visible={completionDialogVisible} onDismiss={() => setCompletionDialogVisible(false)}>
                     <Dialog.Title>Quiz Completed</Dialog.Title>
                     <Dialog.Content>
-                        <Text>You've completed all questions!</Text>
-                        <Text>Correct Answers: {correctAnswersCount}/{quizData.length}</Text>
+                        <Text>You've completed all questions! in {quiz.title} </Text>
+                        <Text>Correct Answers: {correctAnswersCount}/{quiz.questions.length}</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => {
                             setCompletionDialogVisible(false);
-                            navigation.replace('Summary', { score: correctAnswersCount, totalQuestions: quizData.length });
+                            navigation.replace('Summary', { score: correctAnswersCount, totalQuestions: quiz.questions.length });
                         }}>See Summary</Button>
                     </Dialog.Actions>
                 </Dialog>
@@ -215,7 +225,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    // Add any other styles you might need
 });
 
 

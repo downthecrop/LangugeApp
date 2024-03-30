@@ -5,7 +5,7 @@ import { Provider } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 import QuizScreen from './QuizScreen';
 import SummaryScreen from './SummaryScreen';
-import BottomNav from './BottomNav';
+import BottomNav from './components/BottomNav';
 
 const Stack = createNativeStackNavigator();
 

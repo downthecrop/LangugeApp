@@ -16,16 +16,16 @@ const OptionItem = ({ item, onSelect, status }) => {
     }
 
     return (
-        <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            layout={commonSpringLayout}
-            style={[styles.optionItem, { backgroundColor }]}
-        >
-            <TouchableOpacity onPress={() => onSelect(item)}>
+        <TouchableOpacity onPress={() => onSelect(item)}>
+            <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                layout={commonSpringLayout}
+                style={[styles.optionItem, { backgroundColor }]}
+            >
                 <Text style={styles.optionText}>{item}</Text>
-            </TouchableOpacity>
-        </Animated.View>
+            </Animated.View>
+        </TouchableOpacity>
     );
 };
 

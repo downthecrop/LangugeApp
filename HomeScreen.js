@@ -1,42 +1,46 @@
 import React from 'react';
-import { ScrollView, StyleSheet, StatusBar } from 'react-native'; // Import ScrollView
-import { commonStyles } from './CommonStyles'; // Import common styles
-import QuizButton from './QuizButton';
+import { ScrollView, StyleSheet, StatusBar } from 'react-native';
+import { commonStyles } from './CommonStyles';
+import QuizButton from './components/QuizButton';
 import { useNavigation } from '@react-navigation/native';
 import quizData from './QuizData';
+import useStore from './store';
 
 const HomeScreen = () => {
-  const navigation = useNavigation(); // Get the navigation object
+  const navigation = useNavigation();
+  const quizScores = useStore(state => state.quizScores);
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#1c1b1f" />
-      <ScrollView style={[commonStyles.darkThemeBackground, styles.scrollView]} contentContainerStyle={styles.container}>
-        {quizData.map((quiz, index) => (
-          <QuizButton
-            key={index} // Consider using a more unique key if available
-            quizData={quiz.questions} // Assuming you want to pass the entire quiz object
-            imgUrl={quiz.imgUrl}
-            title={quiz.title}
-            subTitle={quiz.subTitle}
-            navigation={navigation}
-            rating={quiz.rating}
-          />
-        ))}
+      <ScrollView style={[commonStyles.darkThemeBackground, commonStyles.container]} contentContainerStyle={styles.container}>
+        {quizData.map((quiz, index) => {
+          const scoreString = quizScores[quiz.title];
+          const [score, maxScore] = scoreString ? scoreString.split('/').map(Number) : [0, quiz.questions.length];
+          const rating = (score / maxScore) * 5;
+          console.log("Score for", quiz.title, score, rating)
+          return (
+            <QuizButton
+              key={index}
+              quizData={quiz}
+              imgUrl={quiz.imgUrl}
+              title={quiz.title}
+              subTitle={quiz.subTitle}
+              navigation={navigation}
+              rating={rating}
+            />
+          );
+        })}
       </ScrollView>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1, // Make ScrollView expand to fill the space
-    backgroundColor: '#1c1b1f',
-  },
   container: {
-    flexGrow: 1, // Ensure the container fills the height
-    alignItems: 'center', // Center items horizontally
-    paddingTop: 20, // Padding at the top
-    paddingBottom: 20, // Padding at the bottom
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
     backgroundColor: '#1c1b1f',
   },
 });
