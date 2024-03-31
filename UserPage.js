@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
-import { Text } from 'react-native-paper';
+import { SafeAreaView, ScrollView, View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import useStore from './store';
-import { List, MD3Colors } from 'react-native-paper';
+import { List, Divider, Avatar, Text, useTheme, MD3Colors } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 
 GoogleSignin.configure({
@@ -11,6 +10,7 @@ GoogleSignin.configure({
 });
 
 const UserPage = () => {
+  const { colors } = useTheme();
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -50,45 +50,93 @@ const UserPage = () => {
 
   return (
     <>
-    <View style={[commonStyles.defaultContainer, commonStyles.darkThemeBackground]}>
-      {userInfo ? (
-        <>
-          <Text style={styles.userInfo}>Welcome, {userInfo.user.name}!</Text>
-          <Text style={styles.userInfo}>Email: {userInfo.user.email}</Text>
-          <Button title="Sign Out" onPress={_signOut} />
-        </>
-      ) : (
-        <>
-          <GoogleSigninButton
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={_signIn}
-            disabled={isSigninInProgress}
-          />
-          <Text style={styles.text}>Please sign in</Text>
-        </>
-      )}
-    </View>
-    <List.Section>
-    <List.Subheader>Some title</List.Subheader>
-    <List.Item title="First Item" left={() => <List.Icon icon="folder" />} />
-    <List.Item
-      title="Second Item"
-      left={() => <List.Icon color={MD3Colors.tertiary70} icon="folder" />}
-    />
-  </List.Section>
+      <View style={[commonStyles.defaultContainer, commonStyles.darkThemeBackground]}>
+        {userInfo ? (
+          <>
+            <Text style={styles.userInfo}>Welcome, {userInfo.user.name}!</Text>
+            <Text style={styles.userInfo}>Email: {userInfo.user.email}</Text>
+            <Button title="Sign Out" onPress={_signOut} />
+          </>
+        ) : (
+          <>
+
+            <SafeAreaView>
+              <ScrollView>
+                <GoogleSigninButton
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={_signIn}
+                  disabled={isSigninInProgress}
+                />
+                <Text style={styles.text}>Please sign in</Text>
+                <View style={styles.headerContainer}>
+                  <Avatar.Image size={50} source={require('./assets/korean-flag.jpg')} />
+                  <View style={styles.headerTextContainer}>
+                    <Text style={styles.nameText}>Bryce</Text>
+                    <Text style={styles.statusText}>0xCOFFEE</Text>
+                  </View>
+                </View>
+                <Divider />
+                <List.Section>
+                  <List.Item
+                    title="Account"
+                    description="Security notifications, change number"
+                    left={() => <List.Icon color={colors.primary} icon="account" />}
+                  />
+                  <List.Item
+                    title="Privacy"
+                    description="Block contacts, disappearing messages"
+                    left={() => <List.Icon color={colors.primary} icon="lock" />}
+                  />
+                  <List.Item
+                    title="Avatar"
+                    description="Create, edit, profile photo"
+                    left={() => <List.Icon color={colors.primary} icon="face" />}
+                  />
+                  <List.Item
+                    title="Chats"
+                    description="Theme, wallpapers, chat history"
+                    left={() => <List.Icon color={colors.primary} icon="message" />}
+                  />
+                  <List.Item
+                    title="Notifications"
+                    description="Message, group & call tones"
+                    left={() => <List.Icon color={colors.primary} icon="bell" />}
+                  />
+                </List.Section>
+              </ScrollView>
+            </SafeAreaView>
+          </>
+        )}
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   text: {
-    color:'white',
+    color: 'white',
     fontSize: 20,
   },
   userInfo: {
     marginTop: 20,
     fontSize: 18,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+  },
+  headerTextContainer: {
+    marginLeft: 20,
+  },
+  nameText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  statusText: {
+    fontSize: 16,
+    color: 'grey',
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { commonStyles } from './CommonStyles';
 import { SegmentedButtons, Divider, Portal, Modal, Checkbox, Icon } from 'react-native-paper';
@@ -11,7 +11,7 @@ const QuizConfigScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
 
-    const questions = quizData[0].questions;
+
     const [value, setValue] = React.useState('train');
 
     const handleUnitToggle = (unit) => {
@@ -24,16 +24,23 @@ const QuizConfigScreen = () => {
     return (
         <View style={[styles.container, commonStyles.darkThemeBackground]}>
             <View style={styles.iconTextContainer}>
-                <Icon
-                    source="translate"
-                    color={'#e8def8'}
-                    size={120}
-                />
-                <Text style={styles.text}>5 Minute Quiz</Text>
+                <View style={styles.circle}>
+                    <Icon
+                        source="translate"
+                        color={'#e8def8'}
+                        size={120}
+                    />
+                </View>
+                <View style={styles.highscore}>
+                    <Text style={ styles.textSub }>Personal Best: 0</Text>
+                </View>
             </View>
             <View style={[styles.content]}>
                 <View style={[commonStyles.darkThemeBackground, { marginBottom: 40 }]}>
-                    <Button mode="outlined" onPress={() => setModalVisible(true)}>Select Quiz Units</Button>
+                <TouchableOpacity style={styles.selectQuizButton} onPress={() => setModalVisible(true)}>
+                <Icon source="plus-circle-outline" color={'#e8def8'} size={24} style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>  Select Quiz Units</Text>
+            </TouchableOpacity>
                     <Portal>
                         <Modal
                             visible={modalVisible}
@@ -84,7 +91,7 @@ const QuizConfigScreen = () => {
                     </View>
                 </View>
 
-                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { questions })}>Start Quiz</Button>
+                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData })}>Start 5 Minute Quiz</Button>
             </View>
         </View>
     );
@@ -98,19 +105,66 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
+    },
+    highscore: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:'#2c2831',
+        borderRadius: 32,
+        padding: 10,
     },
     text: {
+        fontWeight: 'bold',
         color: 'white',
         marginBottom: 10,
+        fontSize: 16,
+    },
+    textSub: {
+        color: 'white',
         fontSize: 16,
     },
     audioToggle: {
         marginVertical: 20,
     },
+    circle: {
+        backgroundColor: '#101010',
+        width: 180,
+        height: 180,
+        borderRadius: 150,
+        borderWidth: 4,
+        borderColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    
+    iconTextContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     segmentedControl: {
         justifyContent: 'center',
         marginTop: 10,
+    },
+    selectQuizButton: {
+        backgroundColor: '#101010',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#e8def8',
+        backgroundColor: 'transparent',
+    },
+    buttonIcon: {
+        marginRight: 8,
+    },
+    buttonText: {
+        color: '#e8def8',
+        fontSize: 16,
     },
     modalContainer: {
         borderRadius: 24,
@@ -125,7 +179,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     iconTextContainer: {
-        marginTop: 120,
+        marginTop: 100,
         alignItems: 'center',
         justifyContent: 'center',
     },

@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import HomeScreen from '../HomeScreen';
 import UserPage from '../UserPage';
 import { useTheme } from 'react-native-paper';
-import QuizConfigScreen from '../QuizConfigScreen';
+import QuizConfigScreen from '../TimedQuizConfig';
 
 const HomeRoute = () => <HomeScreen />;
 const QuizConfigRoute = () => <QuizConfigScreen />;

@@ -14,6 +14,17 @@ const arraysMatch = (arr1, arr2) => {
     return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
 };
 
+function shuffleArray(array) {
+    const shuffledArray = [...array]; // Create a copy of the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      // Generate a random index between 0 and i
+      const j = Math.floor(Math.random() * (i + 1));
+      // Swap elements at indices i and j
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  }
+
 const QuizScreen = ({ route, navigation }) => {
     const { quizData: quiz } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,7 +38,7 @@ const QuizScreen = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        setOptions(quiz.questions[currentQuestionIndex].options);
+        setOptions(shuffleArray(quiz.questions[currentQuestionIndex].options));
     }, [currentQuestionIndex, quiz]);
 
     const handleBackButtonPress = () => {
@@ -76,7 +87,7 @@ const QuizScreen = ({ route, navigation }) => {
                 }
                 const nextIndex = currentQuestionIndex + 1;
                 setCurrentQuestionIndex(nextIndex);
-                setOptions(quiz.questions[nextIndex].options);
+                setOptions(shuffleArray(quiz.questions[nextIndex].options));
                 setAnswers([]);
                 setOptionStatuses({});
             } else {
