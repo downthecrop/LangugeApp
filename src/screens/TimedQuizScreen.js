@@ -19,7 +19,7 @@ const TimedQuizScreen = () => {
         }));
     };
 
-    const myQuiz = quizData[1];
+    const myQuiz = quizData[0];
 
     return (
         <View style={[styles.container]}>

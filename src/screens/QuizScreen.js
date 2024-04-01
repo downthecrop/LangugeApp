@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Sound from 'react-native-sound';
 import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
@@ -7,6 +7,9 @@ import { commonStyles } from '../styles/CommonStyles';
 import OptionItem from '../components/OptionItem';
 import ProgressBar from '../components/ProgressBar';
 import useStore from '../store/store';
+
+const correctSFX = require("../../assets/correct.mp3");
+const incorrectSFX = require("../../assets/incorrect.mp3");
 
 const arraysMatch = (arr1, arr2) => {
     return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
@@ -33,9 +36,10 @@ const QuizScreen = ({ route, navigation }) => {
     const [exitDialogVisible, setExitDialogVisible] = useState(false);
     const [completionDialogVisible, setCompletionDialogVisible] = useState(false);
     const setScore = useStore((state) => state.setScore);
+    const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
 
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         navigation.setOptions({
             title: quiz.title,
         });
@@ -76,8 +80,15 @@ const QuizScreen = ({ route, navigation }) => {
         return true;
     };
 
+    const playFeedbacks = (isCorrect) => {
+        if(!soundEffectsEnabled) return;
+        isCorrect ? playAudio(correctSFX) : playAudio(incorrectSFX);
+    }
+
     const checkAnswers = () => {
         const isCorrect = arraysMatch(answers, quiz.questions[currentQuestionIndex].correctAnswers);
+
+        playFeedbacks(isCorrect);
 
         let statuses = {};
         answers.forEach(option => {

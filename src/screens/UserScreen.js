@@ -17,7 +17,7 @@ const SettingsCard = ({ title, description, value, onToggle, icon }) => {
       title={title}
       description={description}
       left={() => <List.Icon color={colors.primary} icon={icon} />}
-      right={props => { onToggle != null ? <Switch status={value ? 'checked' : 'unchecked'} onPress={onToggle} /> : null } }
+      right={() => onToggle && value !== undefined ? <Switch value={value} onValueChange={onToggle} /> : null}
       style={styles.card}
     />
   );
@@ -28,8 +28,12 @@ const UserPage = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(false);
-  const toggleSoundEffects = () => setSoundEffectsEnabled(!soundEffectsEnabled);
+
+    // Use the Zustand store for managing dark mode and sound effects state
+    const darkThemeEnabled = useStore((state) => state.darkModeTheme);
+    const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
+    const toggleDarkTheme = useStore((state) => state.toggleDarkModeTheme);
+    const toggleSoundEffects = useStore((state) => state.toggleSfx);
 
   useEffect(() => {
     const checkSignIn = async () => {
@@ -59,7 +63,7 @@ const UserPage = () => {
   const _signOut = async () => {
     try {
       await GoogleSignin.signOut();
-      setUserInfo(null); // Remove user info from state, effectively 'unauthenticating' the user
+      setUserInfo(null);
     } catch (error) {
       console.error(error);
     }
@@ -71,13 +75,13 @@ const UserPage = () => {
         <SafeAreaView>
           <ScrollView style={styles.topMargin}>
             <>
-              {userInfo == null ? (
+              {userInfo ? (
                 <>
                   <View style={styles.headerContainer}>
                     <Avatar.Image size={50} source={require('../../assets/korean-flag.jpg')} />
                     <View style={styles.headerTextContainer}>
-                      <Text style={styles.nameText}>{userInfo?.user.name}EXAMPLE</Text>
-                      <Button title="Sign Out" style={styles.statusText}></Button>
+                      <Text style={styles.nameText}>{userInfo?.user.name}</Text>
+                      <Button onPress={_signOut} title="Sign Out" style={styles.statusText}></Button>
                     </View>
                   </View>
                 </>
@@ -100,6 +104,13 @@ const UserPage = () => {
               icon="bell"
               onToggle={toggleSoundEffects}
             />
+            <SettingsCard
+              title="Dark Theme"
+              description="Enable dark theme"
+              value={darkThemeEnabled}
+              icon="theme-light-dark"
+              onToggle={toggleDarkTheme}
+            />
             <List.Section>
               <List.Item
                 title="Account"
@@ -111,18 +122,7 @@ const UserPage = () => {
                 description="Clear learning progress and hi-scores"
                 left={() => <List.Icon color={colors.primary} icon="delete-forever" />}
               />
-              <List.Item
-                title="Theme"
-                description="Toggle Light and Dark Modes"
-                left={() => <List.Icon color={colors.primary} icon="theme-light-dark" />}
-              />
             </List.Section>
-            <SettingsCard
-              title="Theme"
-              description="Toggle Light and Dark Modes"
-              value={soundEffectsEnabled}
-              icon="theme-light-dark"
-            />
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTextContainer: {
+    flex: 1,
     marginLeft: 20,
   },
   nameText: {

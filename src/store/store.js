@@ -16,14 +16,26 @@ const storage = {
 
 const useStore = create(persist(
     (set) => ({
-        quizScores: {}, // Object to hold scores for quizzes, identified by title
+        quizScores: {},
+        darkModeTheme: true,
+        sfxEnabled: true,
+
         setScore: (quizTitle, score, maxScore) => set((state) => ({
             quizScores: {
                 ...state.quizScores,
-                [quizTitle]: `${score}/${maxScore}`, // Store score and maxScore as a string
+                [quizTitle]: `${score}/${maxScore}`,
             },
         })),
-        getScore: (quizTitle) => state.quizScores[quizTitle], // Function to retrieve the score by quiz title
+
+        toggleDarkModeTheme: () => set((state) => ({
+            darkModeTheme: !state.darkModeTheme,
+        })),
+
+        toggleSfx: () => set((state) => ({
+            sfxEnabled: !state.sfxEnabled,
+        })),
+
+        getScore: (quizTitle) => state.quizScores[quizTitle],
     }),
     {
         name: 'quizScoresStorage',
