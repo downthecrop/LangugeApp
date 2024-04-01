@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { commonStyles } from './CommonStyles';
 import { SegmentedButtons, Divider, Portal, Modal, Checkbox, Icon } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import quizData from './QuizData';
+import quizData from '../data/QuizData';
 
-const QuizConfigScreen = () => {
+const TimedQuizScreen = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
-
 
     const [value, setValue] = React.useState('train');
 
@@ -22,7 +20,7 @@ const QuizConfigScreen = () => {
     };
 
     return (
-        <View style={[styles.container, commonStyles.darkThemeBackground]}>
+        <View style={[styles.container]}>
             <View style={styles.iconTextContainer}>
                 <View style={styles.circle}>
                     <Icon
@@ -32,15 +30,15 @@ const QuizConfigScreen = () => {
                     />
                 </View>
                 <View style={styles.highscore}>
-                    <Text style={ styles.textSub }>Personal Best: 0</Text>
+                    <Text style={styles.textSub}>Personal Best: 0</Text>
                 </View>
             </View>
             <View style={[styles.content]}>
-                <View style={[commonStyles.darkThemeBackground, { marginBottom: 40 }]}>
-                <TouchableOpacity style={styles.selectQuizButton} onPress={() => setModalVisible(true)}>
-                <Icon source="plus-circle-outline" color={'#e8def8'} size={24} style={styles.buttonIcon} />
-                <Text style={styles.buttonText}>  Select Quiz Units</Text>
-            </TouchableOpacity>
+                <View style={[{ marginBottom: 40 }]}>
+                    <TouchableOpacity style={styles.selectQuizButton} onPress={() => setModalVisible(true)}>
+                        <Icon source="plus-circle-outline" color={'#e8def8'} size={24} style={styles.buttonIcon} />
+                        <Text style={styles.buttonText}>  Select Quiz Units</Text>
+                    </TouchableOpacity>
                     <Portal>
                         <Modal
                             visible={modalVisible}
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
     highscore: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'#2c2831',
+        backgroundColor: '#2c2831',
         borderRadius: 32,
         padding: 10,
     },
@@ -138,7 +136,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    
+
     iconTextContainer: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -185,4 +183,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default QuizConfigScreen;
+export default TimedQuizScreen;

@@ -1,13 +1,13 @@
 import React from 'react';
 import { BottomNavigation, Text, PaperProvider, Provider } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from '../HomeScreen';
-import UserPage from '../UserPage';
 import { useTheme } from 'react-native-paper';
-import QuizConfigScreen from '../TimedQuizConfig';
+import TimedQuizScreen from '../screens/TimedQuizScreen';
+import HomeScreen from '../screens/HomeScreen';
+import UserPage from '../screens/UserScreen';
 
 const HomeRoute = () => <HomeScreen />;
-const QuizConfigRoute = () => <QuizConfigScreen />;
+const QuizConfigRoute = () => <TimedQuizScreen />;
 const SummaryRoute = () => <UserPage />;
 
 const BottomNav = () => {

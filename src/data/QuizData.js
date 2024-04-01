@@ -2,7 +2,7 @@ const quizData = [
   {
     title: "Sino Korean Numbers",
     subTitle: "Tap to begin!",
-    imgUrl: require("./assets/1.png"),
+    imgUrl: require("../../assets/1.png"),
     questions: [
       {
         question: "1",
@@ -59,7 +59,7 @@ const quizData = [
   {
     title: "Native Korean Numbers",
     subTitle: "Tap to begin!",
-    imgUrl: require("./assets/3.png"),
+    imgUrl: require("../../assets/3.png"),
     questions: [
       {
         question: "1",

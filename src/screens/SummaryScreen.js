@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { commonStyles } from './CommonStyles';
+import { commonStyles } from '../styles/CommonStyles';
 
 const SummaryScreen = ({ route, navigation }) => {
   const { score, totalQuestions } = route.params;

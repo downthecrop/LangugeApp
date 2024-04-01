@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, StatusBar } from 'react-native';
-import { commonStyles } from './CommonStyles';
-import QuizButton from './components/QuizButton';
 import { useNavigation } from '@react-navigation/native';
-import quizData from './QuizData';
-import useStore from './store';
+import quizData from '../data/QuizData';
+import useStore from '../store/store';
+import { commonStyles } from '../styles/CommonStyles';
+import QuizButton from '../components/QuizButton';
 
 const HomeScreen = () => {
   const navigation = useNavigation();

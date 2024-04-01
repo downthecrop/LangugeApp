@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import Sound from 'react-native-sound';
 import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
-import { commonStyles } from './CommonStyles';
 import { Button, Text, Dialog, Portal, Icon } from 'react-native-paper';
-import OptionItem from './components/OptionItem';
-import ProgressBar from './components/ProgressBar';
-import Sound from 'react-native-sound';
-import useStore from './store';
-
-const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
+import { commonStyles } from '../styles/CommonStyles';
+import OptionItem from '../components/OptionItem';
+import ProgressBar from '../components/ProgressBar';
+import useStore from '../store/store';
 
 const arraysMatch = (arr1, arr2) => {
     return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
 };
 
 function shuffleArray(array) {
-    const shuffledArray = [...array]; // Create a copy of the array
+    const shuffledArray = [...array];
     for (let i = shuffledArray.length - 1; i > 0; i--) {
-      // Generate a random index between 0 and i
-      const j = Math.floor(Math.random() * (i + 1));
-      // Swap elements at indices i and j
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray;
-  }
+}
+
+const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
 const QuizScreen = ({ route, navigation }) => {
     const { quizData: quiz } = route.params;
@@ -37,14 +35,16 @@ const QuizScreen = ({ route, navigation }) => {
     const setScore = useStore((state) => state.setScore);
 
 
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            title: quiz.title,
+        });
+    }, [navigation, quiz.title]);
+
+
     useEffect(() => {
         setOptions(shuffleArray(quiz.questions[currentQuestionIndex].options));
     }, [currentQuestionIndex, quiz]);
-
-    const handleBackButtonPress = () => {
-        setExitDialogVisible(true);
-        return true;
-    };
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleBackButtonPress);
@@ -69,6 +69,11 @@ const QuizScreen = ({ route, navigation }) => {
             setOptions(options.filter(option => option !== selectedOption));
             setAnswers([...answers, selectedOption]);
         }
+    };
+
+    const handleBackButtonPress = () => {
+        setExitDialogVisible(true);
+        return true;
     };
 
     const checkAnswers = () => {
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
     },
     questionText: {
         color: '#FFFFFF',
-        fontSize: 30,
+        fontSize: 50,
         fontWeight: 'bold',
     },
     title: {
@@ -221,15 +226,15 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
     },
-    checkButtonLarge: { // Adjusted style for the larger check button
-        backgroundColor: '#6750a4', // Example color, adjust as needed
-        paddingVertical: 15, // Increased padding for a taller button
-        paddingHorizontal: 20, // Increased padding for a wider button
-        borderRadius: 24, // Rounded corners
+    checkButtonLarge: {
+        backgroundColor: '#6750a4',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 24,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 20,
-        alignSelf: 'stretch', // Stretch to the container's width
+        alignSelf: 'stretch',
     },
     checkButtonText: {
         color: 'white',
