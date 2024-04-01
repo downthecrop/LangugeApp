@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import firestore from '@react-native-firebase/firestore';
 import { List, Divider, Avatar, Text, useTheme, MD3Colors, Checkbox, Switch } from 'react-native-paper';
 import { commonStyles } from '../styles/CommonStyles';
 import useStore from '../store/store';
@@ -28,12 +29,10 @@ const UserPage = () => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-
-    // Use the Zustand store for managing dark mode and sound effects state
-    const darkThemeEnabled = useStore((state) => state.darkModeTheme);
-    const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
-    const toggleDarkTheme = useStore((state) => state.toggleDarkModeTheme);
-    const toggleSoundEffects = useStore((state) => state.toggleSfx);
+  const darkThemeEnabled = useStore((state) => state.darkModeTheme);
+  const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
+  const toggleDarkTheme = useStore((state) => state.toggleDarkModeTheme);
+  const toggleSoundEffects = useStore((state) => state.toggleSfx);
 
   useEffect(() => {
     const checkSignIn = async () => {
@@ -68,6 +67,62 @@ const UserPage = () => {
       console.error(error);
     }
   };
+
+  const backupQuizScores = async () => {
+    try {
+      console.log('Starting backupQuizScores function');
+      const currentUser = await GoogleSignin.getCurrentUser();
+      if (!currentUser) {
+        console.log('No current user found. Please ensure the user is signed in.');
+        return; // Exit the function if no user is signed in
+      }
+      const userId = currentUser?.user?.id;
+      console.log(`Current User ID: ${userId}`);
+  
+      if (!userId) {
+        console.log('User ID is undefined or null. Check the Google Sign-In configuration.');
+        return; // Exit the function if user ID is not available
+      }
+  
+      console.log('Attempting to retrieve quizScores from Zustand store');
+      const quizScores = useStore.getState().quizScores;
+      if (!quizScores) {
+        console.log('Quiz scores are undefined or null. Check the Zustand store configuration.');
+        return; // Exit the function if quizScores are not available
+      }
+  
+      console.log(`Attempting to backup quiz scores for user ID: ${userId}`);
+      await firestore()
+        .collection('quizScores')
+        .doc(userId)
+        .set(quizScores);
+      console.log('Quiz scores backed up successfully.');
+    } catch (error) {
+      console.error('Error in backupQuizScores function:', error);
+    }
+  };
+  
+
+  const restoreQuizScores = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    const userId = currentUser?.user?.id;
+  
+    if (userId) {
+      firestore()
+        .collection('quizScores')
+        .doc(userId)
+        .get()
+        .then((documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            const quizScores = documentSnapshot.data();
+            useStore.getState().setQuizScores(quizScores); // Assuming you have a `setQuizScores` action in your store
+            console.log('Quiz scores restored successfully.');
+          }
+        })
+        .catch((error) => console.error('Error restoring quiz scores:', error));
+    }
+  };
+  
 
   return (
     <>
@@ -113,9 +168,15 @@ const UserPage = () => {
             />
             <List.Section>
               <List.Item
-                title="Account"
-                description="Backup or Restore learning progress"
+                title="Backup Progress"
+                description="Backup learning progress"
                 left={() => <List.Icon color={colors.primary} icon="account" />}
+                onPress={backupQuizScores}
+              />
+              <List.Item
+                title="Restore Progress"
+                description="Restore learning progress"
+                left={() => <List.Icon color={colors.primary} icon="account-arrow-down" />}
               />
               <List.Item
                 title="Rest Progress"
