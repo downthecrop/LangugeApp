@@ -33,13 +33,14 @@ const styles = StyleSheet.create({
     optionItem: {
         padding: 14,
         borderRadius: 24,
+        paddingHorizontal: 28,
         margin: 6,
         alignItems: 'center',
         justifyContent: 'center',
     },
     optionText: {
         color: '#f9feff',
-        fontSize: 18,
+        fontSize: 20,
     },
 });
 

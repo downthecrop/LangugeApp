@@ -10,14 +10,14 @@ GoogleSignin.configure({
 });
 
 
-const SettingsCard = ({ title, description, value, onToggle }) => {
+const SettingsCard = ({ title, description, value, onToggle, icon }) => {
   const { colors } = useTheme();
   return (
     <List.Item
       title={title}
       description={description}
-      left={() => <List.Icon color={colors.primary} icon="bell" />}
-      right={props => <Switch status={value ? 'checked' : 'unchecked'} onPress={onToggle} />}
+      left={() => <List.Icon color={colors.primary} icon={icon} />}
+      right={props => { onToggle != null ? <Switch status={value ? 'checked' : 'unchecked'} onPress={onToggle} /> : null } }
       style={styles.card}
     />
   );
@@ -95,37 +95,34 @@ const UserPage = () => {
             <Divider />
             <SettingsCard
               title="Sound Effects"
-              description="Play sound Effects"
+              description="Play sound effects"
               value={soundEffectsEnabled}
+              icon="bell"
               onToggle={toggleSoundEffects}
             />
             <List.Section>
               <List.Item
                 title="Account"
-                description="Security notifications, change number"
+                description="Backup or Restore learning progress"
                 left={() => <List.Icon color={colors.primary} icon="account" />}
               />
               <List.Item
-                title="Privacy"
-                description="Block contacts, disappearing messages"
-                left={() => <List.Icon color={colors.primary} icon="lock" />}
+                title="Rest Progress"
+                description="Clear learning progress and hi-scores"
+                left={() => <List.Icon color={colors.primary} icon="delete-forever" />}
               />
               <List.Item
-                title="Avatar"
-                description="Create, edit, profile photo"
-                left={() => <List.Icon color={colors.primary} icon="face" />}
-              />
-              <List.Item
-                title="Chats"
-                description="Theme, wallpapers, chat history"
-                left={() => <List.Icon color={colors.primary} icon="message" />}
-              />
-              <List.Item
-                title="Notifications"
-                description="Message, group & call tones"
-                left={() => <List.Icon color={colors.primary} icon="bell" />}
+                title="Theme"
+                description="Toggle Light and Dark Modes"
+                left={() => <List.Icon color={colors.primary} icon="theme-light-dark" />}
               />
             </List.Section>
+            <SettingsCard
+              title="Theme"
+              description="Toggle Light and Dark Modes"
+              value={soundEffectsEnabled}
+              icon="theme-light-dark"
+            />
           </ScrollView>
         </SafeAreaView>
       </View>

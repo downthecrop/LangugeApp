@@ -10,7 +10,7 @@ const TimedQuizScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
 
-    const [value, setValue] = React.useState('train');
+    const [value, setValue] = useState('train');
 
     const handleUnitToggle = (unit) => {
         setSelectedUnits(prevUnits => ({
@@ -18,6 +18,8 @@ const TimedQuizScreen = () => {
             [unit]: !prevUnits[unit]
         }));
     };
+
+    const myQuiz = quizData[1];
 
     return (
         <View style={[styles.container]}>
@@ -89,7 +91,7 @@ const TimedQuizScreen = () => {
                     </View>
                 </View>
 
-                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData })}>Start 5 Minute Quiz</Button>
+                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData: myQuiz })}>Start 5 Minute Quiz</Button>
             </View>
         </View>
     );
