@@ -14,6 +14,7 @@ const HomeScreen = () => {
       <StatusBar barStyle="light-content" backgroundColor="#1c1b1f" />
       <ScrollView style={[commonStyles.darkThemeBackground, commonStyles.container]} contentContainerStyle={styles.container}>
         {quizData.map((quiz, index) => {
+          console.log(quizScores)
           const scoreString = quizScores[quiz.title];
           const [score, maxScore] = scoreString ? scoreString.split('/').map(Number) : [0, quiz.questions.length];
           const rating = (score / maxScore) * 5;

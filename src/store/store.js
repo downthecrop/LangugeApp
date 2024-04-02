@@ -35,6 +35,10 @@ const useStore = create(persist(
             sfxEnabled: !state.sfxEnabled,
         })),
 
+        setQuizScores: (newScores) => set(() => ({
+            quizScores: newScores,
+        })),        
+
         getScore: (quizTitle) => state.quizScores[quizTitle],
     }),
     {
