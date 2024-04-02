@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { View, StyleSheet } from 'react-native';
 
-const ProgressBar = ({ currentQuestionIndex, quizData }) => {
+const ProgressBar = ({ progress }) => {
     
     const progressBarWidth = useSharedValue(0);
 
     useEffect(() => {
-        progressBarWidth.value = withTiming((currentQuestionIndex + 1) / quizData.length * 100, {
+        progressBarWidth.value = withTiming(progress, {
             duration: 300,
         });
-    }, [currentQuestionIndex, quizData.length]);
+    }, [progress]);
 
     const animatedProgressBarStyle = useAnimatedStyle(() => {
         return {
@@ -18,13 +18,13 @@ const ProgressBar = ({ currentQuestionIndex, quizData }) => {
         };
     });
 
-
     return (
         <View style={styles.progressBarContainer}>
             <Animated.View style={[styles.progressBar, animatedProgressBarStyle]} />
         </View>
-    )
+    );
 }
+
 const styles = StyleSheet.create({
     progressBarContainer: {
         height: 4,

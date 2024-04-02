@@ -7,6 +7,7 @@ import { commonStyles } from '../styles/CommonStyles';
 import OptionItem from '../components/OptionItem';
 import ProgressBar from '../components/ProgressBar';
 import useStore from '../store/store';
+import CountdownTimerBar from '../components/CountdownTimerBar';
 
 const correctSFX = require("../../assets/correct.mp3");
 const incorrectSFX = require("../../assets/incorrect.mp3");
@@ -27,7 +28,7 @@ function shuffleArray(array) {
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
 const QuizScreen = ({ route, navigation }) => {
-    const { quizData: quiz } = route.params;
+    const { quizData: quiz, duration } = route.params;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [options, setOptions] = useState([]);
     const [optionStatuses, setOptionStatuses] = useState({});
@@ -37,6 +38,25 @@ const QuizScreen = ({ route, navigation }) => {
     const [completionDialogVisible, setCompletionDialogVisible] = useState(false);
     const setScore = useStore((state) => state.setScore);
     const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
+
+
+    const isTimedQuiz = !!duration;
+
+
+    useEffect(() => {
+        if (isTimedQuiz) {
+            const timer = setTimeout(() => {
+                timeUp();
+            }, duration * 1000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [duration, isTimedQuiz]);
+
+    const timeUp = () => {
+        setCompletionDialogVisible(true);
+    };
+
 
 
     useLayoutEffect(() => {
@@ -126,12 +146,6 @@ const QuizScreen = ({ route, navigation }) => {
                     console.log('failed to load the sound', error);
                     return;
                 }
-                console.log(
-                    'duration in seconds: ' +
-                    audio.getDuration() +
-                    'number of channels: ' +
-                    audio.getNumberOfChannels(),
-                );
                 audio.play()
             },
         );
@@ -167,7 +181,11 @@ const QuizScreen = ({ route, navigation }) => {
                     <Text style={styles.checkButtonText}>Check Answers</Text>
                 </TouchableOpacity>
             </ScrollView>
-            <ProgressBar currentQuestionIndex={currentQuestionIndex} quizData={quiz.questions} />
+            {isTimedQuiz ? (
+                <CountdownTimerBar duration={duration} />
+            ) : (
+                <ProgressBar progress={(currentQuestionIndex / quiz.questions.length) * 100} />
+            )}
             <Portal>
                 <Dialog visible={exitDialogVisible} onDismiss={() => setExitDialogVisible(false)}>
                     <Dialog.Title>Exit Quiz</Dialog.Title>

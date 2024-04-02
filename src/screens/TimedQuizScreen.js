@@ -91,7 +91,7 @@ const TimedQuizScreen = () => {
                     </View>
                 </View>
 
-                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData: myQuiz })}>Start 5 Minute Quiz</Button>
+                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData: myQuiz, duration: 10 })}>Start 5 Minute Quiz</Button>
             </View>
         </View>
     );

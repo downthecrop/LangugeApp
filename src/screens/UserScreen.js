@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, Button } from 'react-native'; // Import Button from react-native
+import { SafeAreaView, ScrollView, View, StyleSheet, Button } from 'react-native';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth'; // Ensure you have imported Firebase Auth
+import auth from '@react-native-firebase/auth';
 import { List, Divider, Avatar, Text, useTheme, Switch, Snackbar, Portal } from 'react-native-paper';
 import { commonStyles } from '../styles/CommonStyles';
 import useStore from '../store/store';
-import quizData from '../data/QuizData';
 
 GoogleSignin.configure({
   webClientId: '657297089143-3t2me6899c1flplc8repopjs1qlapge4.apps.googleusercontent.com',
