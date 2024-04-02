@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import Sound from 'react-native-sound';
 import { View, TouchableOpacity, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Layout, FadeIn, FadeOut } from 'react-native-reanimated';
@@ -11,20 +11,6 @@ import CountdownTimerBar from '../components/CountdownTimerBar';
 
 const correctSFX = require("../../assets/correct.mp3");
 const incorrectSFX = require("../../assets/incorrect.mp3");
-
-const arraysMatch = (arr1, arr2) => {
-    return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
-};
-
-function shuffleArray(array) {
-    const shuffledArray = [...array];
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-    }
-    return shuffledArray;
-}
-
 const commonSpringLayout = Layout.springify().mass(0.8).stiffness(200).damping(15);
 
 const QuizScreen = ({ route, navigation }) => {
@@ -39,6 +25,8 @@ const QuizScreen = ({ route, navigation }) => {
     const setScore = useStore((state) => state.setScore);
     const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
 
+    const correctAnswersCountRef = useRef(correctAnswersCount); // Hack
+    correctAnswersCountRef.current = correctAnswersCount;
 
     const isTimedQuiz = !!duration;
 
@@ -48,16 +36,9 @@ const QuizScreen = ({ route, navigation }) => {
             const timer = setTimeout(() => {
                 timeUp();
             }, duration * 1000);
-
             return () => clearTimeout(timer);
         }
     }, [duration, isTimedQuiz]);
-
-    const timeUp = () => {
-        setCompletionDialogVisible(true);
-    };
-
-
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -100,9 +81,27 @@ const QuizScreen = ({ route, navigation }) => {
         return true;
     };
 
+    const timeUp = () => {
+        setScore(quiz.title, correctAnswersCountRef.current, quiz.questions.length);
+        setCompletionDialogVisible(true);
+    };
+
     const playFeedbacks = (isCorrect) => {
-        if(!soundEffectsEnabled) return;
+        if (!soundEffectsEnabled) return;
         isCorrect ? playAudio(correctSFX) : playAudio(incorrectSFX);
+    }
+
+    const arraysMatch = (arr1, arr2) => {
+        return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
+    };
+    
+    const shuffleArray = (array) => {
+        const shuffledArray = [...array];
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
     }
 
     const checkAnswers = () => {
@@ -200,7 +199,7 @@ const QuizScreen = ({ route, navigation }) => {
                         }}>Yes</Button>
                     </Dialog.Actions>
                 </Dialog>
-                <Dialog visible={completionDialogVisible} onDismiss={() => setCompletionDialogVisible(false)}>
+                <Dialog visible={completionDialogVisible} onDismiss={() => navigation.goBack()}>
                     <Dialog.Title>Quiz Completed</Dialog.Title>
                     <Dialog.Content>
                         <Text>You've completed all questions! in {quiz.title} </Text>
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingTop: 50,
         paddingHorizontal: 20,
-        justifyContent: 'space-between', // Adjust to space content
+        justifyContent: 'space-between',
     },
     wrapper: {
         flexGrow: 1,

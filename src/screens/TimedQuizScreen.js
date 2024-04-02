@@ -4,22 +4,50 @@ import { Button, Text } from 'react-native-paper';
 import { SegmentedButtons, Divider, Portal, Modal, Checkbox, Icon } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import quizData from '../data/QuizData';
+import useStore from '../store/store';
 
 const TimedQuizScreen = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUnits, setSelectedUnits] = useState({});
-
     const [value, setValue] = useState('train');
+    const quizScores = useStore(state => state.quizScores);
 
-    const handleUnitToggle = (unit) => {
-        setSelectedUnits(prevUnits => ({
-            ...prevUnits,
-            [unit]: !prevUnits[unit]
-        }));
+
+    const aggregateQuestions = () => {
+        let questions = [];
+        Object.keys(selectedUnits).forEach(index => {
+            if (selectedUnits[index]) {
+                questions = questions.concat(quizData[index].questions);
+            }
+        });
+       return {
+            title: "custom",
+            questions: questions
+        }
     };
 
-    const myQuiz = quizData[0];
+    const handleUnitToggle = (index) => {
+        setSelectedUnits(prevUnits => ({
+            ...prevUnits,
+            [index]: !prevUnits[index]
+        }));
+    };
+    const handleStartButton = () => {
+        const selectedIndexes = Object.keys(selectedUnits).filter(index => selectedUnits[index]);
+        console.log(selectedIndexes);
+        console.log(quizScores)
+        if (selectedIndexes.length < 1) {
+            console.log("No units selected..");
+            return;
+        }
+    
+        navigation.navigate('Quiz', { quizData: aggregateQuestions(), duration: 10 });
+    };
+
+    const bestCustom = quizScores["custom"] ? quizScores["custom"] : 0;
+    
+
 
     return (
         <View style={[styles.container]}>
@@ -32,7 +60,7 @@ const TimedQuizScreen = () => {
                     />
                 </View>
                 <View style={styles.highscore}>
-                    <Text style={styles.textSub}>Personal Best: 0</Text>
+                    <Text style={styles.textSub}>Personal Best: {bestCustom}</Text>
                 </View>
             </View>
             <View style={[styles.content]}>
@@ -52,19 +80,18 @@ const TimedQuizScreen = () => {
                                     <View key={index} style={styles.modalItem}>
                                         <Text style={styles.text}>{quiz.title}</Text>
                                         <Checkbox
-                                            status={selectedUnits[quiz] ? 'checked' : 'unchecked'}
-                                            onPress={() => handleUnitToggle(quiz)}
+                                            status={selectedUnits[index] ? 'checked' : 'unchecked'}
+                                            onPress={() => handleUnitToggle(index)}
                                         />
                                     </View>
                                 ))}
                             </ScrollView>
+
                             <Button mode='outlined' onPress={() => setModalVisible(false)}>Done</Button>
                         </Modal>
                     </Portal>
                 </View>
-
                 <Divider />
-
                 <View style={styles.audioToggle}>
                     <View style={styles.segmentedControl}>
                         <SegmentedButtons
@@ -91,7 +118,7 @@ const TimedQuizScreen = () => {
                     </View>
                 </View>
 
-                <Button mode="contained" onPress={() => navigation.navigate('Quiz', { quizData: myQuiz, duration: 10 })}>Start 5 Minute Quiz</Button>
+                <Button mode="contained" onPress={handleStartButton}>Start 5 Minute Quiz</Button>
             </View>
         </View>
     );
