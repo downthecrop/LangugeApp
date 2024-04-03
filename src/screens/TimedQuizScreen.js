@@ -22,7 +22,7 @@ const TimedQuizScreen = () => {
             }
         });
        return {
-            title: "custom",
+            title: "Custom",
             questions: questions
         }
     };
@@ -45,7 +45,7 @@ const TimedQuizScreen = () => {
         navigation.navigate('Quiz', { quizData: aggregateQuestions(), duration: 10 });
     };
 
-    const bestCustom = quizScores["custom"] ? quizScores["custom"] : "0";
+    const bestCustom = quizScores["Custom"] ? quizScores["Custom"] : "0";
     
 
 
