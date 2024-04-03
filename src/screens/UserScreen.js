@@ -31,9 +31,9 @@ const UserPage = () => {
   const [snackbarVisible, setSnackbarVisible] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
 
-  const darkThemeEnabled = useStore((state) => state.darkModeTheme);
+  //const darkThemeEnabled = useStore((state) => state.darkModeTheme);
+  //const toggleDarkTheme = useStore((state) => state.toggleDarkModeTheme);
   const soundEffectsEnabled = useStore((state) => state.sfxEnabled);
-  const toggleDarkTheme = useStore((state) => state.toggleDarkModeTheme);
   const toggleSoundEffects = useStore((state) => state.toggleSfx);
 
   useEffect(() => {
@@ -44,7 +44,6 @@ const UserPage = () => {
         setUserInfo(userInfo);
       }
     };
-
     checkSignIn();
   }, []);
 
@@ -69,21 +68,6 @@ const UserPage = () => {
       console.error(error);
     }
   };
-
-
-  /**
-    Firestore rule
-
-    service cloud.firestore {
-    match /databases/{database}/documents {
-      match /quizScores/{userId} {
-        allow read, update, delete: if request.auth != null && request.auth.uid == userId;
-        allow create: if request.auth != null;
-      }
-    }
-  }
-
-  */
 
   const backupQuizScores = async () => {
     try {
@@ -226,6 +210,10 @@ const UserPage = () => {
               icon="bell"
               onToggle={toggleSoundEffects}
             />
+            {/*
+
+                // Maybe one day we will add theme support...
+
             <SettingsCard
               title="Dark Theme"
               description="Enable dark theme"
@@ -233,6 +221,7 @@ const UserPage = () => {
               icon="theme-light-dark"
               onToggle={toggleDarkTheme}
             />
+            */}
             <List.Section>
               <List.Item
                 title="Backup Progress"

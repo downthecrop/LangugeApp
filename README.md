@@ -29,9 +29,7 @@ You can launch the app in the browser but it is intended for Android/iOS Mobile 
 
 `npm start`
 
-`a` -- Launch on Android Device/Simulator
-
-`w` -- Launch in the browser
+`a` - Launch on Android Device/Simulator
 
 ## Midjourney V6 Image Prompt
 
@@ -39,4 +37,20 @@ Quiz items use AI generated images as their background image. To keep the style 
 
 ```
  A flat illustration of {}. flat illustrations in the style of a colorful cartoon. The style is simple lines with a white background and fresh colors that have high-end color matching. clipart artwork of uncomplicated corporate artwork, city, in digital artstyle. --ar 21:9 --s 750
+```
+
+
+## Firebase Setup
+
+To use the backup/restore functions built into HanaCount for your own fork you can use the following rule in firebase firestore. You will also need to update the `webClientId` in the `UserSettings` screen.
+
+```
+  service cloud.firestore {
+    match /databases/{database}/documents {
+      match /quizScores/{userId} {
+        allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null;
+      }
+    }
+  }
 ```
