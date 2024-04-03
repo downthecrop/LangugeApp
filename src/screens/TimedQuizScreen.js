@@ -45,7 +45,7 @@ const TimedQuizScreen = () => {
         navigation.navigate('Quiz', { quizData: aggregateQuestions(), duration: 10 });
     };
 
-    const bestCustom = quizScores["custom"] ? quizScores["custom"] : 0;
+    const bestCustom = quizScores["custom"] ? quizScores["custom"] : "0";
     
 
 
@@ -60,7 +60,7 @@ const TimedQuizScreen = () => {
                     />
                 </View>
                 <View style={styles.highscore}>
-                    <Text style={styles.textSub}>Personal Best: {bestCustom}</Text>
+                    <Text style={styles.textSub}>Personal Best: {bestCustom.split("/")[0]}</Text>
                 </View>
             </View>
             <View style={[styles.content]}>
