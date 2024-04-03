@@ -1,8 +1,3 @@
-npx react-native doctor
-
-expo run:android
-
-
 # HanaCount
 
 Welcome to HanaCount, a React Native app for mastering Korean numbers! With support for buth Sino-Korean to native Korean numerals, HanaCount offers a focused approach to boost your number recall speed in everyday contexts like dates, money, and time.
@@ -31,6 +26,15 @@ You can launch the app in the browser but it is intended for Android/iOS Mobile 
 
 `a` - Launch on Android Device/Simulator
 
+## Building
+
+> Note: SHA1/256 fingerprint need to be added to your Firebase Google Signin to function correctly
+
+`npx react-native doctor`
+
+`expo run:android`
+
+
 ## Midjourney V6 Image Prompt
 
 Quiz items use AI generated images as their background image. To keep the style consistent please use the following prompt if you intend to add additional course material
@@ -54,3 +58,5 @@ To use the backup/restore functions built into HanaCount for your own fork you c
     }
   }
 ```
+
+You will also need to add your signing fingerprint to the Google Signin  https://developers.google.com/android/guides/client-auth
