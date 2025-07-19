@@ -24,7 +24,7 @@ You can launch the app in the browser but it is intended for Android/iOS Mobile 
 
 `npm start`
 
-`a` - Launch on Android Device/Simulator
+`a` - Launch on Android Device/Simulator (Use Expo Go SDK 50)
 
 ## Building
 
