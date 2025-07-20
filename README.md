@@ -20,19 +20,19 @@ Welcome to HanaCount, a React Native app for mastering Korean numbers! With supp
 
 ## Running
 
-You can launch the app in the browser but it is intended for Android/iOS Mobile devices. Works well and was developed using the Android Studio device simulator.
+This app is intended for Android/iOS Mobile devices. It works well and was developed using the Android Studio device simulator.
 
 `npm start`
 
-`a` - Launch on Android Device/Simulator (Use Expo Go SDK 50)
+`a` - Launch on Android Device/Simulator (Requires `expo-dev-client` and a native build)
 
 ## Building
 
 > Note: SHA1/256 fingerprint need to be added to your Firebase Google Signin to function correctly
 
-`npx react-native doctor`
+`npx expo prebuild` (if you modify native code or plugins)
 
-`expo run:android`
+`npx expo run:android`
 
 
 ## Midjourney V6 Image Prompt
