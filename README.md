@@ -6,11 +6,9 @@ Welcome to HanaCount, a React Native app for mastering Korean numbers! With supp
 
 ## Screenshots
 
-| | |
-| :---: | :---: |
-| ![](repo-images/Account.png) | ![](repo-images/CustomQuiz.png) |
-| ![](repo-images/Home-Units.png) | ![](repo-images/Question.png) |
-| ![](repo-images/QuizComplete.png) | |
+| | | | | |
+| :---: | :---: | :---: | :---: | :---: |
+| ![](repo-images/Home-Units.png) | ![](repo-images/Question.png) | ![](repo-images/QuizComplete.png) | ![](repo-images/CustomQuiz.png) | ![](repo-images/Account.png) |
 
 ## Features:
 - Focused Dual Number System Training: Engage with both Sino-Korean and native Korean numbers.
