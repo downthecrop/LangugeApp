@@ -1,6 +1,16 @@
+![](repo-images/readmeheader.png)
+
 # HanaCount
 
 Welcome to HanaCount, a React Native app for mastering Korean numbers! With support for buth Sino-Korean to native Korean numerals, HanaCount offers a focused approach to boost your number recall speed in everyday contexts like dates, money, and time.
+
+## Screenshots
+
+| | |
+| :---: | :---: |
+| ![](repo-images/Account.png) | ![](repo-images/CustomQuiz.png) |
+| ![](repo-images/Home-Units.png) | ![](repo-images/Question.png) |
+| ![](repo-images/QuizComplete.png) | |
 
 ## Features:
 - Focused Dual Number System Training: Engage with both Sino-Korean and native Korean numbers.
@@ -60,3 +70,6 @@ To use the backup/restore functions built into HanaCount for your own fork you c
 ```
 
 You will also need to add your signing fingerprint to the Google Signin  https://developers.google.com/android/guides/client-auth
+
+
+
